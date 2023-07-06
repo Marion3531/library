@@ -1,5 +1,7 @@
 package com.example.library.controller;
 
+import java.util.List;
+
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.library.model.Author;
 import com.example.library.model.Book;
 import com.example.library.service.BookService;
 
@@ -37,8 +40,8 @@ public class BookController {
     }
     
     @PostMapping("/books")
-    public ResponseEntity<?> createBook(@RequestBody Book newBook) {
-        return bookService.createNewBook(newBook);
+    public ResponseEntity<?> createBook(@RequestBody Book newBook, @RequestParam("authorId") List<Author> authorIds) {
+        return bookService.createNewBook(newBook, authorIds);
     }
     
     @PutMapping("/books/{id}")

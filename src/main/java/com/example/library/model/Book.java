@@ -7,8 +7,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.JoinColumn;
 
 
 @Entity
@@ -18,9 +21,16 @@ public class Book {
 	private @Id @GeneratedValue Long id;
 	private String title;
 	private String description;
-	private Author author;
 	
-    @ManyToMany(mappedBy = "books", fetch = FetchType.EAGER)
+    /*@ManyToMany(mappedBy = "books", fetch = FetchType.EAGER)
+    private List<Author> authors = new ArrayList<>();*/
+	
+    @ManyToMany
+    @JoinTable(
+        name = "author_book",
+        joinColumns = @JoinColumn(name = "book_id"),
+        inverseJoinColumns = @JoinColumn(name = "author_id")
+    )
     private List<Author> authors = new ArrayList<>();
 	
 	Book() {}
@@ -53,14 +63,19 @@ public class Book {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
 	
-	public void setAuthor(Author author) {
-		this.author = author;
+	public List<Author> getAuthors() {
+		return authors;
+	}
+
+	public void setAuthors(List<Author> authors) {
+		this.authors = authors;
 	}
 
 	@Override
 	public String toString() {
 		return "Book [id=" + id + ", title=" + title + ", description=" + description + ", authors=" + authors + "]";
 	}
-	
+
 }

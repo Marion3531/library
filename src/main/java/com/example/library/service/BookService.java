@@ -13,9 +13,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import com.example.library.assembler.BookModelAssembler;
 import com.example.library.controller.BookController;
 import com.example.library.exception.BookNotFoundException;
+import com.example.library.model.Author;
 import com.example.library.model.Book;
 import com.example.library.repository.BookRepository;
 
@@ -49,21 +52,7 @@ public class BookService {
 	}
 
 	// POST
-	public ResponseEntity<?> createNewBook(@RequestBody Book newBook) {
-
-		EntityModel<Book> entityModel = assembler.toModel(repository.save(newBook));
-
-		return ResponseEntity //
-				.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
-				.body(entityModel);
-	}
-	/*public ResponseEntity<?> createNewBook(@RequestBody Book newBook, @RequestParam("authorId") Long authorId) {
-		
-	    // Récupérer l'auteur à partir de l'ID
-	    Author author = authorService.getAuthorById(authorId).getContent();
-
-	    // Associer l'auteur au nouveau livre
-	    newBook.setAuthor(author);
+	/*public ResponseEntity<?> createNewBook(@RequestBody Book newBook) {
 
 		EntityModel<Book> entityModel = assembler.toModel(repository.save(newBook));
 
@@ -71,6 +60,20 @@ public class BookService {
 				.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
 				.body(entityModel);
 	}*/
+	public ResponseEntity<?> createNewBook(@RequestBody Book newBook, @RequestParam("authorId") List<Author> authorIds) {
+		
+	    // Récupérer l'auteur à partir de l'ID
+		//CollectionModel<EntityModel<Author>> authors = authorService.getAllAuthors();
+
+	    // Associer l'auteur au nouveau livre
+	    newBook.setAuthors(authorIds);;
+
+		EntityModel<Book> entityModel = assembler.toModel(repository.save(newBook));
+
+		return ResponseEntity //
+				.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
+				.body(entityModel);
+	}
 
 	// PUT
 	public ResponseEntity<?> replaceBook(@RequestBody Book newBook, @PathVariable Long id) {

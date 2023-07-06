@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.JoinColumn;
 
@@ -19,14 +20,17 @@ public class Author {
 	String firstname;
 	String lastname;
 	
-	@ManyToMany
+    @OneToMany(mappedBy = "book")
+    private List<Book> books = new ArrayList<>();
+    
+	/*@ManyToMany
 	@JoinTable(
             name = "author_book",
             joinColumns = @JoinColumn(name = "author_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "book_id", referencedColumnName = "id")
     )
 	
-	private List<Book> books = new ArrayList<>();
+	private List<Book> books = new ArrayList<>();*/
 	
 	Author() {}
 	
