@@ -2,6 +2,7 @@ package com.example.library.service;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -12,7 +13,6 @@ import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.library.assembler.BookModelAssembler;
@@ -50,49 +50,68 @@ public class BookService {
 		Book book = repository.findById(id).orElseThrow(() -> new BookNotFoundException(id));
 		return assembler.toModel(book);
 	}
-
-	// POST
-	/*public ResponseEntity<?> createNewBook(@RequestBody Book newBook) {
-
-		EntityModel<Book> entityModel = assembler.toModel(repository.save(newBook));
-
-		return ResponseEntity //
-				.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
-				.body(entityModel);
-	}*/
-	public ResponseEntity<?> createNewBook(@RequestBody Book newBook, @RequestParam("authorId") List<Author> authorIds) {
+	
+	/*@POST
+	@Produces("application/json")
+	public Article createArticle(@FormParam("titre") String title,
+								@FormParam("contenu") String content) {
 		
-	    // Récupérer l'auteur à partir de l'ID
-		//CollectionModel<EntityModel<Author>> authors = authorService.getAllAuthors();
-
-	    // Associer l'auteur au nouveau livre
-	    newBook.setAuthors(authorIds);;
-
+		Article article = service.create(title, content);
+		
+		article = service.save(article);
+		
+		return article;
+	}*/
+	
+	// POST
+	
+	public ResponseEntity<?> createNewBook(String title, String description, @RequestParam("authorId") List<Author> authorIds){
+		
+		CollectionModel<EntityModel<Author>> authors = authorService.getAllAuthors();
+		
+		// compare the authorIds  
+		List<Author> matchingAuthors = new ArrayList<>();
+	    for (Author author : authorIds) {
+	        if (authors.getContent().stream().anyMatch(a -> a.getContent().getId().equals(author.getId()))) {
+	            matchingAuthors.add(author);
+	        }
+	    }
+        /* equivalent of :
+         * for (Author author : authors) {
+            if (authorIds.contains(author.getId())) {
+                matchingAuthors.add(author);
+            }
+           }*/
+	    
+	    Book newBook = new Book();
+		newBook.setTitle(title);
+		newBook.setDescription(description);
+		newBook.setAuthors(matchingAuthors);
+		
 		EntityModel<Book> entityModel = assembler.toModel(repository.save(newBook));
 
 		return ResponseEntity //
 				.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
 				.body(entityModel);
+		
 	}
 
 	// PUT
-	public ResponseEntity<?> replaceBook(@RequestBody Book newBook, @PathVariable Long id) {
+	public ResponseEntity<?> replaceBook(Long id, String title, String description, List<Author> authors) {
 
 		Book updatedBook = repository.findById(id) //
 				.map(book -> {
-					book.setTitle(newBook.getTitle());
-					book.setDescription(newBook.getDescription());
+					book.setTitle(title);
+					book.setDescription(description);
+					book.setAuthors(authors);
 					return repository.save(book);
-				}) //
-				.orElseGet(() -> {
-					newBook.setId(id);
-					return repository.save(newBook);
-				});
+				}) 
+				.orElseThrow(() -> new BookNotFoundException(id));
 
 		EntityModel<Book> entityModel = assembler.toModel(updatedBook);
 
-		return ResponseEntity //
-				.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
+		return ResponseEntity 
+				.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) 
 				.body(entityModel);
 	}
 

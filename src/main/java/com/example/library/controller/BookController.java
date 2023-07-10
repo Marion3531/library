@@ -40,13 +40,19 @@ public class BookController {
     }
     
     @PostMapping("/books")
-    public ResponseEntity<?> createBook(@RequestBody Book newBook, @RequestParam("authorId") List<Author> authorIds) {
-        return bookService.createNewBook(newBook, authorIds);
+    public ResponseEntity<?> createBook(@RequestParam("title") String title, 
+    									@RequestParam("description") String description,
+    									@RequestParam("authorId") List<Author> authorIds) {
+        return bookService.createNewBook(title, description, authorIds);
     }
     
     @PutMapping("/books/{id}")
-    public ResponseEntity<?> updateBook(@RequestBody Book newBook, @PathVariable Long id){
-    	return bookService.replaceBook(newBook, id);
+    public ResponseEntity<?> updateBook(@PathVariable Long id,
+    									@RequestParam("title") String title,
+										@RequestParam("description") String description,
+										@RequestParam("authors") List<Author> authors
+										){
+    	return bookService.replaceBook(id, title, description, authors);
     }
     
     @DeleteMapping("/books/{id}")
