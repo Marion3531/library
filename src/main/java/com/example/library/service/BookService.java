@@ -64,14 +64,14 @@ public class BookService {
 	}*/
 	
 	// POST
-	
-	public ResponseEntity<?> createNewBook(String title, String description, @RequestParam("authorId") List<Author> authorIds){
+	//String title, String description, @RequestParam("authorId") List<Author> authorIds
+	public ResponseEntity<?> createNewBook(Book book){
 		
 		CollectionModel<EntityModel<Author>> authors = authorService.getAllAuthors();
 		
 		// compare the authorIds  
 		List<Author> matchingAuthors = new ArrayList<>();
-	    for (Author author : authorIds) {
+	    for (Author author : book.getAuthors()) {
 	        if (authors.getContent().stream().anyMatch(a -> a.getContent().getId().equals(author.getId()))) {
 	            matchingAuthors.add(author);
 	        }
@@ -84,8 +84,8 @@ public class BookService {
            }*/
 	    
 	    Book newBook = new Book();
-		newBook.setTitle(title);
-		newBook.setDescription(description);
+		newBook.setTitle(book.getTitle());
+		newBook.setDescription(book.getDescription());
 		newBook.setAuthors(matchingAuthors);
 		
 		EntityModel<Book> entityModel = assembler.toModel(repository.save(newBook));

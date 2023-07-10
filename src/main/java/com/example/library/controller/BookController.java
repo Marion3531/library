@@ -40,10 +40,11 @@ public class BookController {
     }
     
     @PostMapping("/books")
-    public ResponseEntity<?> createBook(@RequestParam("title") String title, 
+    public ResponseEntity<?> createBook(@RequestBody Book newBook
+    									/*@RequestParam("title") String title, 
     									@RequestParam("description") String description,
-    									@RequestParam("authorId") List<Author> authorIds) {
-        return bookService.createNewBook(title, description, authorIds);
+    									@RequestParam("authorId") List<Author> authorIds*/) {
+        return bookService.createNewBook(newBook);
     }
     
     @PutMapping("/books/{id}")
