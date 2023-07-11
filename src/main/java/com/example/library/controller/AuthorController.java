@@ -36,17 +36,17 @@ public class AuthorController {
     }
     
     @PostMapping("/authors")
-	public ResponseEntity<?> createBook(@RequestBody Author newBook) {
+	public ResponseEntity<?> createAuthor(@RequestBody Author newBook) {
 		return authorService.createNewAuthor(newBook);
 	}
     
     @PutMapping("/authors/{id}")
-    public ResponseEntity<?> updateBook(@RequestBody Author newBook, @PathVariable Long id){
+    public ResponseEntity<?> updatereateAuthor(@RequestBody Author newBook, @PathVariable Long id){
     	return authorService.replaceAuthor(newBook, id);
     }
     
     @DeleteMapping("/authors/{id}")
-    ResponseEntity<?> deleteBook(@PathVariable Long id){
+    ResponseEntity<?> deletereateAuthor(@PathVariable Long id){
     	return authorService.delAuthor(id);
     }
 }

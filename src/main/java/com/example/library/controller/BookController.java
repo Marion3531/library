@@ -48,12 +48,8 @@ public class BookController {
     }
     
     @PutMapping("/books/{id}")
-    public ResponseEntity<?> updateBook(@PathVariable Long id,
-    									@RequestParam("title") String title,
-										@RequestParam("description") String description,
-										@RequestParam("authors") List<Author> authors
-										){
-    	return bookService.replaceBook(id, title, description, authors);
+    public ResponseEntity<?> updateBook(@RequestBody Book book){
+    	return bookService.replaceBook(book);
     }
     
     @DeleteMapping("/books/{id}")

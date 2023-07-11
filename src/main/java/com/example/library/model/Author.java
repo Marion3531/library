@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
@@ -17,7 +18,7 @@ public class Author {
 	String firstname;
 	String lastname;
     
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	private List<Book> books = new ArrayList<>();
 	
 	Author() {}
@@ -51,9 +52,17 @@ public class Author {
 		this.lastname = lastname;
 	}
 
+	public List<Book> getBooks() {
+		return books;
+	}
+
+	public void setBooks(List<Book> books) {
+		this.books = books;
+	}
+
 	@Override
 	public String toString() {
-		return "Author [id=" + id + ", firstname=" + firstname + ", lastname=" + lastname + "]";
+		return "Author [id=" + id + ", firstname=" + firstname + ", lastname=" + lastname + ", books=" + books + "]";
 	}
 
 }

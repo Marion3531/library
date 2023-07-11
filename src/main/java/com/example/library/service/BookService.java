@@ -97,16 +97,17 @@ public class BookService {
 	}
 
 	// PUT
-	public ResponseEntity<?> replaceBook(Long id, String title, String description, List<Author> authors) {
+	public ResponseEntity<?> replaceBook(Book book) { //Book book = new data
 
-		Book updatedBook = repository.findById(id) //
-				.map(book -> {
-					book.setTitle(title);
-					book.setDescription(description);
-					book.setAuthors(authors);
+		Book updatedBook = repository.findById(book.getId()) 
+				
+				.map(existingBook -> {
+					existingBook.setTitle(book.getTitle());
+					existingBook.setDescription(book.getDescription());
+					existingBook.setAuthors(book.getAuthors());
 					return repository.save(book);
 				}) 
-				.orElseThrow(() -> new BookNotFoundException(id));
+				.orElseThrow(() -> new BookNotFoundException(book.getId()));
 
 		EntityModel<Book> entityModel = assembler.toModel(updatedBook);
 
