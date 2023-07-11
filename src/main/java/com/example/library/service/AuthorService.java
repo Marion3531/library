@@ -78,8 +78,8 @@ public class AuthorService {
 	}
 
 	// DELETE
-	public ResponseEntity<?> delAuthor(@PathVariable Long id) {
+	public void deleteAuthorById(@PathVariable Long id) {
 
-		return ResponseEntity.noContent().build();
+		repository.deleteById(id);;
 	}
 }

@@ -80,8 +80,10 @@ public class AuthorController {
 
     
     @DeleteMapping("/authors/{id}")
-    ResponseEntity<?> deletereateAuthor(@PathVariable Long id){
+    ResponseEntity<?> deleteAuthor(@PathVariable Long id){
     	
-    	return authorService.delAuthor(id);
+    	authorService.deleteAuthorById(id);
+    	
+    	return ResponseEntity.noContent().build();
     }
 }

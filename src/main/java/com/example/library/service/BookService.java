@@ -82,7 +82,7 @@ public class BookService {
 	}
 
 	// DELETE
-	public void delBook(@PathVariable Long id) {
+	public void deleteBookById(@PathVariable Long id) {
 
 		repository.deleteById(id);
 	}
