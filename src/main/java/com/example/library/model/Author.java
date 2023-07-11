@@ -21,7 +21,7 @@ public class Author {
 	@ManyToMany(fetch = FetchType.EAGER)
 	private List<Book> books = new ArrayList<>();
 	
-	Author() {}
+	public Author() {}
 	
 	public Author(String firstname, String lastname){
 		this.firstname = firstname;

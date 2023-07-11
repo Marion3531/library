@@ -31,55 +31,54 @@ public class AuthorService {
 	}
 
 	// Aggregate root
-	public CollectionModel<EntityModel<Author>> getAllAuthors() {
+	public List<Author> getAllAuthors() {
 
-		List<EntityModel<Author>> authors = repository.findAll().stream().map(assembler::toModel)
-				.collect(Collectors.toList());
+		List<Author> authors = repository.findAll();
 
-		return CollectionModel.of(authors, linkTo(methodOn(AuthorController.class).all()).withSelfRel());
+		return authors;
 	}
 	
 	// Single item
-	public EntityModel<Author> getAuthorById(Long id) {
+	public Author getAuthorById(Long id) {
+		
 		Author author = repository.findById(id).orElseThrow(() -> new AuthorNotFoundException(id));
-		return assembler.toModel(author);
+		
+		return author;
 	}
 
 	// POST
-	public ResponseEntity<?> createNewAuthor(@RequestBody Author newAuthor) {
+	public Author createNewAuthor(@RequestBody Author author) {
 
-		EntityModel<Author> entityModel = assembler.toModel(repository.save(newAuthor));
+		//Author entityModel = assembler.toModel(repository.save(newAuthor));
 
-		return ResponseEntity //
-				.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
-				.body(entityModel);
+		Author newAuthor = new Author();
+		newAuthor.setFirstname(author.getFirstname());
+		newAuthor.setLastname(author.getLastname());
+		
+		newAuthor = repository.save(newAuthor);
+
+		return newAuthor;
 	}
 
 	// PUT
-	public ResponseEntity<?> replaceAuthor(@RequestBody Author newAuthor, @PathVariable Long id) {
+	public Author replaceAuthor(@PathVariable Long id, @RequestBody Author updatedAuthor) {
 
-	    Author updatedAuthor = repository.findById(id)
-	            .map(author -> {
-	                author.setFirstname(newAuthor.getFirstname());
-	                author.setLastname(newAuthor.getLastname());
-	                return repository.save(author);
-	            })
-	            .orElseGet(() -> {
-	                newAuthor.setId(id);
-	                return repository.save(newAuthor);
-	            });
+	    Author currentAuthor = repository.findById(id)
+	    		.orElseThrow(() -> new AuthorNotFoundException(id));
 
-	    EntityModel<Author> entityModel = assembler.toModel(updatedAuthor);
-
-	    return ResponseEntity
-	            .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
-	            .body(entityModel);
+	    if (updatedAuthor.getFirstname() != null) {
+	    	currentAuthor.setFirstname(updatedAuthor.getFirstname());
+	    }
+	    
+	    if (updatedAuthor.getLastname() != null) {
+	    	currentAuthor.setLastname(updatedAuthor.getLastname());
+	    }
+	    
+	    return repository.save(currentAuthor) ;
 	}
 
 	// DELETE
 	public ResponseEntity<?> delAuthor(@PathVariable Long id) {
-
-		repository.deleteById(id);
 
 		return ResponseEntity.noContent().build();
 	}
