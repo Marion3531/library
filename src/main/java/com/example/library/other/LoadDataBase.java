@@ -14,7 +14,7 @@ import com.example.library.repository.AuthorRepository;
 @Configuration
 class LoadDatabase {
 	
-	private static final Logger log = LoggerFactory.getLogger(LoadDatabase.class);
+	//private static final Logger log = LoggerFactory.getLogger(LoadDatabase.class);
 	
 	  @Bean
 	  CommandLineRunner initDatabase(BookRepository bookRepository, AuthorRepository authorRepository) {
@@ -25,17 +25,17 @@ class LoadDatabase {
 	      bookRepository.save(new Book("White Teeth", "xxx"));
 	      bookRepository.save(new Book("Watchmen", "xxx"));
 
-	      bookRepository.findAll().forEach(book -> log.info("Preloaded " + book));
+	      //bookRepository.findAll().forEach(book -> log.info("Preloaded " + book));
 
-	      
 	      authorRepository.save(new Author("Deborah", "Levy"));
 	      authorRepository.save(new Author("Zadie", "Smith"));
 	      authorRepository.save(new Author("Alan", "Moore"));
 	      authorRepository.save(new Author("Dave", "Gibson"));
 
-	      authorRepository.findAll().forEach(author -> {
+	      //problem with hibernate lazy fetch
+	      /*authorRepository.findAll().forEach(author -> {
 	        log.info("Preloaded " + author);
-	      });
+	      });*/
 	      
 	    };
 	  }

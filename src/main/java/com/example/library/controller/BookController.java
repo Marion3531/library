@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.library.assembler.BookModelAssembler;
@@ -57,6 +58,17 @@ public class BookController {
     	Book book = bookService.getBookById(id);
     	
         return assembler.toModel(book);
+    }
+    
+    @GetMapping("/books/search")
+    public CollectionModel<EntityModel<Book>> searchBook(@RequestParam("query") String query) {
+        List<Book> booksFound = bookService.searchBookByName(query);
+
+        List<EntityModel<Book>> bookModels = booksFound.stream()
+                .map(assembler::toModel)
+                .collect(Collectors.toList());
+
+        return CollectionModel.of(bookModels, linkTo(methodOn(BookController.class).all()).withSelfRel());
     }
     
     @PostMapping("/books")

@@ -3,6 +3,8 @@ package com.example.library.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -18,8 +20,14 @@ public class Author {
 	String firstname;
 	String lastname;
     
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(mappedBy = "authors", fetch = FetchType.LAZY)
+	
+	@JsonIgnoreProperties(value = "authors") 
 	private List<Book> books = new ArrayList<>();
+	
+	/* @JsonIgnoreProperties(value = "authors") :
+	 * for each book, you can fetch the authors, but inside the authors ignore the books property cause we don't really need it. 
+	 * we started from book and we only want to see the authors, we don't need to go further*/
 	
 	public Author() {}
 	

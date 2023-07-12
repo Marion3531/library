@@ -8,12 +8,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.example.library.exception.BookNotFoundException;
 import com.example.library.model.Author;
 import com.example.library.model.Book;
+import com.example.library.repository.AuthorRepository;
 import com.example.library.repository.BookRepository;
 
 @Service
 public class BookService {
 
 	private final BookRepository repository;
+	
+	@Autowired
+	private AuthorRepository authorRepository;
 	
 	@Autowired
 	private AuthorService authorService;
@@ -36,6 +40,32 @@ public class BookService {
 		Book book = repository.findById(id).orElseThrow(() -> new BookNotFoundException(id));
 		
 		return book;
+	}
+	
+	public List<Book> searchBookByName(String query) {
+		
+		List<Book> books = repository.findAll();
+		List<Author> authors = authorRepository.findAll();
+		
+		List<Book> booksFound = new ArrayList<>();
+		
+		for (Book book : books) {
+			if(book.getTitle().equalsIgnoreCase(query)) {
+				booksFound.add(book);
+			}
+		}
+		
+		for (Author author : authors) {
+			if (author.getFirstname().equalsIgnoreCase(query) || author.getLastname().equalsIgnoreCase(query)){
+				booksFound.addAll(author.getBooks());
+			}
+		}
+
+		if (booksFound.isEmpty()) { 
+		    return books;  
+		} else {
+		    return booksFound; 
+		}
 	}
 	
 	// POST

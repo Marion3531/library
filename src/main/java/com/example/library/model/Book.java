@@ -3,6 +3,8 @@ package com.example.library.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -21,12 +23,14 @@ public class Book {
 	private String title;
 	private String description;
 	
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "author_book",
         joinColumns = @JoinColumn(name = "book_id"),
         inverseJoinColumns = @JoinColumn(name = "author_id")
     )
+    
+    @JsonIgnoreProperties(value = "books")
     private List<Author> authors = new ArrayList<>();
 	
     /*@ManyToMany
