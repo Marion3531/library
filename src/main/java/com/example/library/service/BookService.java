@@ -15,10 +15,10 @@ import com.example.library.repository.BookRepository;
 public class BookService {
 
 	private final BookRepository repository;
-	
+
 	@Autowired
 	private AuthorRepository authorRepository;
-	
+
 	@Autowired
 	private AuthorService authorService;
 
@@ -30,44 +30,47 @@ public class BookService {
 	public List<Book> getAllBooks() {
 
 		List<Book> books = repository.findAll();
-		
+
 		return books;
 	}
 
 	// Single item
 	public Book getBookById(Long id) {
-		
+
 		Book book = repository.findById(id).orElseThrow(() -> new BookNotFoundException(id));
-		
+
 		return book;
 	}
-	
+
 	public List<Book> searchBookByName(String query) {
 		
 		List<Book> books = repository.findAll();
-		List<Author> authors = authorRepository.findAll();
 		
 		List<Book> booksFound = new ArrayList<>();
 		
 		for (Book book : books) {
 			if(book.getTitle().equalsIgnoreCase(query)) {
 				booksFound.add(book);
+			}else {
+				for (Author author : book.getAuthors()) {
+					if (author.getFirstname().equalsIgnoreCase(query) || author.getLastname().equalsIgnoreCase(query)){
+						booksFound.addAll(author.getBooks());
+					}
+				}
 			}
-		}
-		
-		for (Author author : authors) {
-			if (author.getFirstname().equalsIgnoreCase(query) || author.getLastname().equalsIgnoreCase(query)){
-				booksFound.addAll(author.getBooks());
-			}
-		}
-
-		if (booksFound.isEmpty()) { 
-		    return books;  
-		} else {
-		    return booksFound; 
-		}
+				
 	}
-	
+
+	if(booksFound.isEmpty())
+
+	{
+		return books;
+	}else
+	{
+		return booksFound;
+	}
+	}
+
 	// POST
 	public Book createNewBook(Book book){
 		

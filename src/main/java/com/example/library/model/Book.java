@@ -33,14 +33,6 @@ public class Book {
     @JsonIgnoreProperties(value = "books")
     private List<Author> authors = new ArrayList<>();
 	
-    /*@ManyToMany
-    @JoinTable(
-        name = "author_book",
-        joinColumns = @JoinColumn(name = "book_id"),
-        inverseJoinColumns = @JoinColumn(name = "author_id")
-    )
-    private List<Author> authors = new ArrayList<>();*/
-	
 	public Book() {}
 	
 	public Book(String title, String description){
@@ -71,7 +63,6 @@ public class Book {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-
 	
 	public List<Author> getAuthors() {
 		return authors;
@@ -85,5 +76,4 @@ public class Book {
 	public String toString() {
 		return "Book [id=" + id + ", title=" + title + ", description=" + description + ", authors=" + authors + "]";
 	}
-
 }
