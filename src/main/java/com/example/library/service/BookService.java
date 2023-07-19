@@ -47,66 +47,6 @@ public class BookService {
 	public List<Book> searchBookByTitle(String query) {
 
 		return repository.searchBookByTitle(query);
-		
-		//List<Book> books = repository.findAll();
-
-		//List<Book> booksFound = new ArrayList<>();
-
-		//1) FOR LOOP - WHAT I DID
-		 
-		/*for (Book book : books) {
-			if (book.getTitle().equalsIgnoreCase(query)) {
-				booksFound.add(book);
-			} else {
-				for (Author author : book.getAuthors()) {
-					if (author.getFirstname().equalsIgnoreCase(query) || author.getLastname().equalsIgnoreCase(query)) {
-						booksFound.addAll(author.getBooks());
-					}
-				}
-			}
-		}*/
-			
-		//2)FOR LOOP - WHAT THANOS DID
-		
-		/*String queryLower = query.toLowerCase();
-		
-		for (Book book : books) { // We need to check for every book if it matches our criteria. so we iterate over the books
-
-            // Another improvement here. check if the title contains the query. else it tries to match it exactly
-            // You can do the same with author's first and last name
-//			if ( book.getTitle().equalsIgnoreCase(query) ) {
-            if ( book.getTitle().toLowerCase().contains(queryLower)) {
-                // if the book title matches the query, add it to found
-				booksFound.add(book);
-			} else {
-                // if book title doesn't match, check if ANY of the authors' names match the query
-				for (Author author : book.getAuthors()) {
-					if (author.getFirstname().equalsIgnoreCase(query) || author.getLastname().equalsIgnoreCase(query)) {
-                        // We found an author that matches. Add the book from above to the found
-                        booksFound.add(book);
-                        // Since we found one author that matches, we don't care about the others. We already added the book
-                        break;
-
-                        // So the difference with your version is only that, when the author matches, we don't need all the author's books.
-                        // we just need the book we are testing right now
-//						booksFound.addAll(author.getBooks());
-					}
-				}
-			}		
-		}*/
-		
-		//3) WITH STREAM
-		
-		/*String queryLower = query.toLowerCase();
-		
-        return books.stream()
-                .filter(book ->
-                    book.getTitle().toLowerCase().contains(queryLower) || // Here we check the book title
-                    book.getAuthors() // And here we check the author names
-                        .stream()
-                        .anyMatch(author -> author.getFirstname().equalsIgnoreCase(query) || author.getLastname().equalsIgnoreCase(query))
-                )
-                .toList();*/
 	}
 
 	// POST
