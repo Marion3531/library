@@ -62,7 +62,7 @@ public class BookController {
     
     @GetMapping("/books/search")
     public CollectionModel<EntityModel<Book>> searchBook(@RequestParam("query") String query) {
-        List<Book> booksFound = bookService.searchBookByName(query);
+        List<Book> booksFound = bookService.searchBookByTitle(query);
 
         List<EntityModel<Book>> bookModels = booksFound.stream()
                 .map(assembler::toModel)
