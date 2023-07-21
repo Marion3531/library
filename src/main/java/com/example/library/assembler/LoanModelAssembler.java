@@ -5,19 +5,16 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
-import org.springframework.stereotype.Component;
 
 import com.example.library.controller.AuthorController;
-import com.example.library.model.Author;
+import com.example.library.model.Loan;
 
-
-@Component
-public class AuthorModelAssembler implements RepresentationModelAssembler<Author, EntityModel<Author>> {
+public class LoanModelAssembler implements RepresentationModelAssembler <Loan, EntityModel<Loan>> {
 
 	@Override
-	public EntityModel<Author> toModel(Author author) {
-	    return EntityModel.of(author, //
-	            linkTo(methodOn(AuthorController.class).one(author.getId())).withSelfRel(),
+	public EntityModel<Loan> toModel(Loan loan) {
+	    return EntityModel.of(loan, //
+	            linkTo(methodOn(AuthorController.class).one(loan.getId())).withSelfRel(),
 	            linkTo(methodOn(AuthorController.class).all()).withRel("authors"));
 	}
 

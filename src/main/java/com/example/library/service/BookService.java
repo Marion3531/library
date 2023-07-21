@@ -2,31 +2,34 @@ package com.example.library.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
+
 import com.example.library.exception.BookNotFoundException;
 import com.example.library.model.Author;
 import com.example.library.model.Book;
+import com.example.library.model.Loan;
 import com.example.library.repository.AuthorRepository;
 import com.example.library.repository.BookRepository;
 
 @Service
 public class BookService {
-
+	
 	private final BookRepository repository;
+	
+	public BookService(BookRepository repository) {
+		this.repository = repository;
+	}
 
 	@Autowired
 	private AuthorRepository authorRepository;
 
 	@Autowired
 	private AuthorService authorService;
-
-	public BookService(BookRepository repository) {
-		this.repository = repository;
-	}
+	
+	@Autowired
+	private LoanService loanService;
 
 	// Aggregate root
 	public List<Book> getAllBooks() {
@@ -44,9 +47,10 @@ public class BookService {
 		return book;
 	}
 
+	// SEARCH
 	public List<Book> searchBookByTitle(String query) {
 
-		return repository.searchBookByTitle(query);
+		return repository.searchBookByTitleOrByAuthorsLastname(query);
 	}
 
 	// POST
@@ -67,10 +71,19 @@ public class BookService {
 		newBook.setDescription(book.getDescription());
 		newBook.setAuthors(matchingAuthors);
 
-		return newBook;
+		return repository.save(newBook);
 	}
+	
+	//BORROW
+	public Loan borrowBook(Loan newLoan) {
+		
+		
+	}
+	
+	//RETURN
+	
 
-	// PUT
+	// UPDATE BOOK(PUT)
 	public Book replaceBook(Long id, Book updatedBook) { // Book book = new data
 
 		Book currentBook = repository.findById(id).orElseThrow(() -> new BookNotFoundException(id));
@@ -87,9 +100,10 @@ public class BookService {
 			currentBook.setAuthors(updatedBook.getAuthors());
 
 		}
-
+	    
 		return repository.save(currentBook);
 	}
+	
 
 	// DELETE
 	public void deleteBookById(@PathVariable Long id) {
