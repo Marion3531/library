@@ -22,7 +22,7 @@ public class Loan {
 	
 	//one-to-many relationship between Book and Loan -> each book can have multiple loans (including both active and returned loans).
 	@ManyToOne
-	@JoinColumn(name="book.id")
+	@JoinColumn(name="book_id")
 	private Book book;
 	
 	public Loan() {

@@ -3,18 +3,22 @@ package com.example.library.service;
 import java.util.Date;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.example.library.model.Book;
 import com.example.library.model.Loan;
 import com.example.library.repository.LoanRepository;
 
+@Service
 public class LoanService {
 
 	private LoanRepository repository;
-	
-	@Autowired
 	private BookService bookService;
+	
+	public LoanService(LoanRepository repository, BookService bookService) {
+		this.repository = repository;
+		this.bookService = bookService;
+	}
 	
 	//GET ALL
 	public List<Loan> getAllLoans(){

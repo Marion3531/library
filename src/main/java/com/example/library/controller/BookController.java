@@ -6,7 +6,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
@@ -35,21 +34,24 @@ public class BookController {
 	private final BookService bookService;
 	private final BookModelAssembler assembler;
 	private final BookRepository repository;
+	private LoanService loanService;
+	private LoanRepository loanRepository;
+	private LoanModelAssembler loanAssembler;
 
-	BookController(BookService bookService, BookModelAssembler assembler, BookRepository repository) {
+	BookController(BookService bookService, 
+					BookModelAssembler assembler, 
+					BookRepository repository, 
+					LoanService loanService, 
+					LoanRepository loanRepository,
+					LoanModelAssembler loanAssembler) {
 		this.bookService = bookService;
 		this.assembler = assembler;
 		this.repository = repository;
+		this.loanService = loanService;
+		this.loanRepository = loanRepository;
+		this.loanAssembler = loanAssembler;
 	}
-	
-	@Autowired
-	private LoanService loanService;
-	
-	@Autowired
-	private LoanRepository loanRepository;
-	
-	@Autowired
-	private LoanModelAssembler loanAssembler;
+
 	
 	// Aggregate root
 	@GetMapping("/books")
@@ -88,7 +90,19 @@ public class BookController {
         return CollectionModel.of(bookModels, linkTo(methodOn(BookController.class).all()).withSelfRel());
     }
     
-    //BORROW(POST)
+    @PostMapping("/books")
+    public ResponseEntity<?> createBook(@RequestBody Book newBook) {
+    	
+        Book book = bookService.createNewBook(newBook);
+        
+        EntityModel<Book> entityModel = assembler.toModel(repository.save(newBook));
+        
+        return ResponseEntity //
+                .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
+                .body(book);
+    }
+    
+    //BORROW A BOOK(POST)
     @PostMapping("books/borrow/{id}")
     public ResponseEntity<?> borrowBook(@PathVariable Long id, @RequestBody Loan newLoan){
     	
@@ -106,16 +120,13 @@ public class BookController {
     
     }
     
-    @PostMapping("/books")
-    public ResponseEntity<?> createBook(@RequestBody Book newBook) {
+    //RETURN A BOOK(DELETE)
+    @DeleteMapping("books/borrow/{id}")
+    public ResponseEntity<?> returnBook(@PathVariable Long id){
     	
-        Book book = bookService.createNewBook(newBook);
-        
-        EntityModel<Book> entityModel = assembler.toModel(repository.save(newBook));
-        
-        return ResponseEntity //
-                .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
-                .body(book);
+    	loanService.deleteLoan(id);
+    	
+    	return ResponseEntity.noContent().build();
     }
    
     
@@ -130,7 +141,7 @@ public class BookController {
     }
     
     @DeleteMapping("/books/{id}")
-    ResponseEntity<?> deleteBook(@PathVariable Long id){
+    public ResponseEntity<?> deleteBook(@PathVariable Long id){
     	
     	bookService.deleteBookById(id);
     	

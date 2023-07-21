@@ -1,20 +1,9 @@
 package com.example.library.service;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
 import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.IanaLinkRelations;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import com.example.library.assembler.AuthorModelAssembler;
-import com.example.library.controller.AuthorController;
 import com.example.library.exception.AuthorNotFoundException;
 import com.example.library.model.Author;
 import com.example.library.repository.AuthorRepository;
@@ -23,11 +12,9 @@ import com.example.library.repository.AuthorRepository;
 public class AuthorService {
 
 	private final AuthorRepository repository;
-	private final AuthorModelAssembler assembler;
 	
-	public AuthorService(AuthorRepository repository, AuthorModelAssembler assembler) {
+	public AuthorService(AuthorRepository repository) {
 		this.repository = repository;
-		this.assembler = assembler;
 	}
 
 	// Aggregate root
@@ -54,10 +41,8 @@ public class AuthorService {
 		Author newAuthor = new Author();
 		newAuthor.setFirstname(author.getFirstname());
 		newAuthor.setLastname(author.getLastname());
-		
-		newAuthor = repository.save(newAuthor);
 
-		return newAuthor;
+		return repository.save(newAuthor);
 	}
 
 	// PUT

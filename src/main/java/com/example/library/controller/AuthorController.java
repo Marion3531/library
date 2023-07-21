@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.library.assembler.AuthorModelAssembler;
 import com.example.library.model.Author;
-import com.example.library.model.Book;
 import com.example.library.repository.AuthorRepository;
 import com.example.library.service.AuthorService;
 

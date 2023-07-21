@@ -2,34 +2,24 @@ package com.example.library.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.example.library.exception.BookNotFoundException;
 import com.example.library.model.Author;
 import com.example.library.model.Book;
-import com.example.library.model.Loan;
-import com.example.library.repository.AuthorRepository;
 import com.example.library.repository.BookRepository;
 
 @Service
 public class BookService {
 	
 	private final BookRepository repository;
-	
-	public BookService(BookRepository repository) {
-		this.repository = repository;
-	}
-
-	@Autowired
-	private AuthorRepository authorRepository;
-
-	@Autowired
 	private AuthorService authorService;
 	
-	@Autowired
-	private LoanService loanService;
+	public BookService(BookRepository repository, AuthorService authorService) {
+		this.repository = repository;
+		this.authorService = authorService;
+	}
 
 	// Aggregate root
 	public List<Book> getAllBooks() {
@@ -73,15 +63,6 @@ public class BookService {
 
 		return repository.save(newBook);
 	}
-	
-	//BORROW
-	public Loan borrowBook(Loan newLoan) {
-		
-		
-	}
-	
-	//RETURN
-	
 
 	// UPDATE BOOK(PUT)
 	public Book replaceBook(Long id, Book updatedBook) { // Book book = new data
@@ -103,7 +84,6 @@ public class BookService {
 	    
 		return repository.save(currentBook);
 	}
-	
 
 	// DELETE
 	public void deleteBookById(@PathVariable Long id) {
