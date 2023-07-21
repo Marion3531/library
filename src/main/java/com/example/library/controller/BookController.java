@@ -112,7 +112,7 @@ public class BookController {
     	
     	Loan loan = loanService.createLoan(id, newLoan); 
     	
-    	EntityModel<Loan> entityModel = loanAssembler.toModel(loanRepository.save(newLoan));
+    	EntityModel<Loan> entityModel = loanAssembler.toModel(loanRepository.save(loan));
     	
         return ResponseEntity //
                 .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //

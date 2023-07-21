@@ -13,7 +13,7 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name="loans")
 public class Loan {
-
+	
 	private @Id @GeneratedValue Long id;
 	private String borrowedBy;
 	private Date borrowingDate;
