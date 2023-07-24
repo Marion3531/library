@@ -40,7 +40,9 @@ public class BookService {
 	// SEARCH
 	public List<Book> searchBookByTitle(String query) {
 
-		return repository.searchBookByTitleOrByAuthorsLastname(query);
+		String lowercaseQuery = "%" + query.toLowerCase() + "%";
+		
+		return repository.searchBookByTitleOrByAuthorsLastname(lowercaseQuery);
 	}
 
 	// POST

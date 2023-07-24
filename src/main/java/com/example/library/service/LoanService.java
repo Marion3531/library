@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.example.library.exception.BookAlreadyBorrowedException;
+import com.example.library.exception.LoanNotFoundException;
 import com.example.library.model.Book;
 import com.example.library.model.Loan;
 import com.example.library.model.User;
@@ -55,10 +56,15 @@ public class LoanService {
 	
 	}
 	
-	//DELETE -> delete loan/return the book
-	public void deleteLoan(Long id) {
+	//PUT -> update loan to isBorrowed = false/return the book
+	public Loan updateLoanToFalse(Long loanId) {
 		
-		repository.deleteById(id);
+		Loan loan = repository.findById(loanId).orElseThrow(() -> new LoanNotFoundException(loanId));;
+		
+		loan.setBorrowed(false);
+		
+		return repository.save(loan);
+		
 	}
 	
 }

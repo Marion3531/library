@@ -116,11 +116,11 @@ public class BookController {
     
     }
     
-    //RETURN A BOOK(DELETE)
-    @DeleteMapping("books/borrow/{id}")
-    public ResponseEntity<?> returnBook(@PathVariable Long id){
+    //RETURN A BOOK(PUT)
+    @PutMapping("books/return/{loanId}")
+    public ResponseEntity<?> returnBook(@PathVariable Long loanId){
     	
-    	loanService.deleteLoan(id);
+    	loanService.updateLoanToFalse(loanId);
     	
     	return ResponseEntity.noContent().build();
     }
