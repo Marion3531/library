@@ -65,24 +65,24 @@ public class BookService {
 	}
 
 	// UPDATE BOOK(PUT)
-	public Book replaceBook(Long id, Book updatedBook) { // Book book = new data
+	public Book replaceBook(Long id, Book book) { // Book book = new data
 
-		Book currentBook = repository.findById(id).orElseThrow(() -> new BookNotFoundException(id));
+		Book updatedBook = repository.findById(id).orElseThrow(() -> new BookNotFoundException(id));
 
-		if (updatedBook.getTitle() != null) {
-			currentBook.setTitle(updatedBook.getTitle());
+		if (book.getTitle() != null) {
+			updatedBook.setTitle(book.getTitle());
 		}
 
-		if (updatedBook.getDescription() != null) {
-			currentBook.setDescription(updatedBook.getDescription());
+		if (book.getDescription() != null) {
+			updatedBook.setDescription(book.getDescription());
 		}
 
-		if (updatedBook.getAuthors() != null) {
-			currentBook.setAuthors(updatedBook.getAuthors());
+		if (book.getAuthors() != null) {
+			updatedBook.setAuthors(book.getAuthors());
 
 		}
 	    
-		return repository.save(currentBook);
+		return repository.save(updatedBook);
 	}
 
 	// DELETE

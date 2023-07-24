@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.example.library.exception.BookAlreadyBorrowedException;
 import com.example.library.model.Book;
 import com.example.library.model.Loan;
+import com.example.library.model.User;
 import com.example.library.repository.LoanRepository;
 
 @Service
@@ -15,10 +16,12 @@ public class LoanService {
 
 	private LoanRepository repository;
 	private BookService bookService;
+	private UserService userService;
 	
-	public LoanService(LoanRepository repository, BookService bookService) {
+	public LoanService(LoanRepository repository, BookService bookService, UserService userService) {
 		this.repository = repository;
 		this.bookService = bookService;
+		this.userService = userService;
 	}
 	
 	//GET ALL
@@ -30,14 +33,17 @@ public class LoanService {
 	}
 	
 	//POST -> create a loan/borrow a book
-	public Loan createLoan(Long bookId, Loan loan) {
+	public Loan createLoan(Long bookId, Long userId) {
 		
 		Book book = bookService.getBookById(bookId);
+		User user = userService.getUserById(userId);
 		
-		if() {
+		List<Loan> activeLoans = repository.findByBookAndIsBorrowedTrue(book);
+		
+		if(activeLoans.isEmpty()) {
 			Loan newLoan = new Loan();
 			newLoan.setBook(book);
-			newLoan.setBorrowedBy(loan.getBorrowedBy());
+			newLoan.setUser(user);
 			newLoan.setBorrowingDate(new Date());
 			newLoan.setBorrowingPeriod(15);
 			newLoan.setBorrowed(true);

@@ -1,22 +1,25 @@
-/*package com.example.library.model;
+package com.example.library.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name="users")
 public class User {
 
 	private @Id @GeneratedValue Long id;
-	
-	private String name;
+	private String username;
+	private String email;
 	
 	public User() {
 		
 	}
 	
-	public User(String name) {
-		this.name = name;
+	public User(String username, String email) {
+		this.username = username;
+		this.email = email;
 	}
 
 	public Long getId() {
@@ -27,17 +30,26 @@ public class User {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", name=" + name + "]";
+		return "User [id=" + id + ", username=" + username + ", email=" + email + "]";
 	}
-	
-}*/
+
+}

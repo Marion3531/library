@@ -15,7 +15,7 @@ import jakarta.persistence.Table;
 public class Loan {
 	
 	private @Id @GeneratedValue Long id;
-	private String borrowedBy;
+
 	private Date borrowingDate;
 	private int borrowingPeriod; //in days
 	private boolean isBorrowed;
@@ -25,13 +25,16 @@ public class Loan {
 	@JoinColumn(name="book_id")
 	private Book book;
 	
+	@ManyToOne
+	@JoinColumn(name="user_id")
+	private User user;
+	
 	public Loan() {
 		
 	}
 
-	public Loan(String borrowedBy, Date borrowingDate, int borrowingPeriod, boolean isBorrowed) {
+	public Loan(Date borrowingDate, int borrowingPeriod, boolean isBorrowed) {
 
-		this.borrowedBy = borrowedBy;
 		this.borrowingDate = borrowingDate;
 		this.borrowingPeriod = borrowingPeriod;
 		this.isBorrowed = isBorrowed;
@@ -43,14 +46,6 @@ public class Loan {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public String getBorrowedBy() {
-		return borrowedBy;
-	}
-
-	public void setBorrowedBy(String borrowedBy) {
-		this.borrowedBy = borrowedBy;
 	}
 
 	public Date getBorrowingDate() {
@@ -85,10 +80,18 @@ public class Loan {
 		this.book = book;
 	}
 
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
 	@Override
 	public String toString() {
-		return "Loan [id=" + id + ", borrowedBy=" + borrowedBy + ", borrowingDate=" + borrowingDate
-				+ ", borrowingPeriod=" + borrowingPeriod + ", isBorrowed=" + isBorrowed + ", book=" + book + "]";
+		return "Loan [id=" + id + ", borrowingDate=" + borrowingDate + ", borrowingPeriod=" + borrowingPeriod
+				+ ", isBorrowed=" + isBorrowed + ", book=" + book + ", user=" + user + "]";
 	}
 
 }

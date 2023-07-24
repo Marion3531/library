@@ -103,14 +103,10 @@ public class BookController {
     }
     
     //BORROW A BOOK(POST)
-    @PostMapping("books/borrow/{id}")
-    public ResponseEntity<?> borrowBook(@PathVariable Long id, @RequestBody Loan newLoan){
-    	
-    	Book book = bookService.getBookById(id); //récup book by id
-    	
-    	newLoan.setBook(book); //attribution du book au prêt
-    	
-    	Loan loan = loanService.createLoan(id, newLoan); 
+    @PostMapping("books/borrow/{bookId}")
+    public ResponseEntity<?> borrowBook(@PathVariable Long bookId, @RequestParam Long userId){
+
+    	Loan loan = loanService.createLoan(bookId, userId); 
     	
     	EntityModel<Loan> entityModel = loanAssembler.toModel(loanRepository.save(loan));
     	
