@@ -9,7 +9,7 @@ import com.example.library.model.Book;
 
 public interface BookRepository extends JpaRepository<Book, Long> {
 	
-	@Query("SELECT b FROM Book b LEFT JOIN b.authors a WHERE LOWER(b.title) LIKE %?1% OR LOWER(a.firstname) LIKE %?1% OR LOWER(a.lastname) LIKE %?1%")
+	@Query("SELECT b FROM Book b LEFT JOIN b.authors a WHERE LOWER(b.title) LIKE ?1 OR LOWER(a.firstname) LIKE ?1 OR LOWER(a.lastname) LIKE ?1")
 	List<Book> searchBookByTitleOrByAuthorsLastname(String query);
 	
 }

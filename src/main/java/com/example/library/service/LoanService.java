@@ -12,6 +12,8 @@ import com.example.library.model.Loan;
 import com.example.library.model.User;
 import com.example.library.repository.LoanRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class LoanService {
 
@@ -57,14 +59,10 @@ public class LoanService {
 	}
 	
 	//PUT -> update loan to isBorrowed = false/return the book
-	public Loan updateLoanToFalse(Long loanId) {
+	@Transactional
+	public void updateLoanToFalse(Long loanId) {
 		
-		Loan loan = repository.findById(loanId).orElseThrow(() -> new LoanNotFoundException(loanId));;
-		
-		loan.setBorrowed(false);
-		
-		return repository.save(loan);
-		
+		repository.markBookAsReturned(loanId);
 	}
 	
 }
