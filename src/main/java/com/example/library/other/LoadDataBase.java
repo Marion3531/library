@@ -1,4 +1,4 @@
-package com.example.library.other;
+/*package com.example.library.other;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -33,16 +33,16 @@ class LoadDatabase {
 	      authorRepository.save(new Author("Dave", "Gibson"));
 
 	      //problem with hibernate lazy fetch
-	      /*authorRepository.findAll().forEach(author -> {
+	      authorRepository.findAll().forEach(author -> {
 	        log.info("Preloaded " + author);
-	      });*/
+	      });
 	      
 	      userRepository.save(new User("Martha31", "martha.dufour@gmail.com"));
 	      userRepository.save(new User("Toto_87", "thierry.cazanovas@gmail.com"));
 	      userRepository.save(new User("Bert00", "bertha.schmidt@gmail.com"));
 	        
 	    };
-	  }
+	  }*/
 
   /*private static final Logger log = LoggerFactory.getLogger(LoadDatabase.class);
 
@@ -62,8 +62,9 @@ class LoadDatabase {
     	log.info("Preloading " + repository.save(new Author("Deborah", "Levy")));
     	log.info("Preloading " + repository.save(new Author("Zadie", "Smith")));
     };
-  }	*/
+  }	
   	
- }
+ }*/
+ 
 
  
