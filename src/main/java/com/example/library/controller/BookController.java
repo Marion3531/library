@@ -23,7 +23,6 @@ import com.example.library.assembler.BookModelAssembler;
 import com.example.library.assembler.LoanModelAssembler;
 import com.example.library.model.Book;
 import com.example.library.model.Loan;
-import com.example.library.repository.BookRepository;
 import com.example.library.repository.LoanRepository;
 import com.example.library.service.BookService;
 import com.example.library.service.LoanService;
@@ -33,22 +32,13 @@ public class BookController {
 
 	private final BookService bookService;
 	private final BookModelAssembler assembler;
-	private final BookRepository repository;
 	private LoanService loanService;
-	private LoanRepository loanRepository;
 	private LoanModelAssembler loanAssembler;
 
-	BookController(BookService bookService, 
-					BookModelAssembler assembler, 
-					BookRepository repository, 
-					LoanService loanService, 
-					LoanRepository loanRepository,
-					LoanModelAssembler loanAssembler) {
+	BookController(BookService bookService, BookModelAssembler assembler, LoanService loanService, LoanModelAssembler loanAssembler) {
 		this.bookService = bookService;
 		this.assembler = assembler;
-		this.repository = repository;
 		this.loanService = loanService;
-		this.loanRepository = loanRepository;
 		this.loanAssembler = loanAssembler;
 	}
 
@@ -91,15 +81,14 @@ public class BookController {
     }
     
     @PostMapping("/books")
-    public ResponseEntity<?> createBook(@RequestBody Book newBook) {
+    public ResponseEntity<?> createBook(@RequestBody Book book) {
     	
-        Book book = bookService.createNewBook(newBook);
+        Book newBook = bookService.createNewBook(book);
         
-        EntityModel<Book> entityModel = assembler.toModel(repository.save(newBook));
-        
-        return ResponseEntity //
-                .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
-                .body(book);
+        EntityModel<Book> entityModel = assembler.toModel(newBook);
+    	
+        return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(newBook);
+
     }
     
     //BORROW A BOOK(POST)
@@ -108,7 +97,7 @@ public class BookController {
 
     	Loan loan = loanService.createLoan(bookId, userId); 
     	
-    	EntityModel<Loan> entityModel = loanAssembler.toModel(loanRepository.save(loan));
+    	EntityModel<Loan> entityModel = loanAssembler.toModel(loan);
     	
         return ResponseEntity //
                 .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //

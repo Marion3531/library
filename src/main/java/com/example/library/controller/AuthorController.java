@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.library.assembler.AuthorModelAssembler;
 import com.example.library.model.Author;
-import com.example.library.repository.AuthorRepository;
 import com.example.library.service.AuthorService;
 
 @RestController
@@ -27,12 +26,10 @@ public class AuthorController {
 
 	private final AuthorService authorService;
 	private final AuthorModelAssembler assembler;
-	private final AuthorRepository repository;
 
-	AuthorController(AuthorService bookService, AuthorModelAssembler assembler, AuthorRepository repository) {
+	AuthorController(AuthorService bookService, AuthorModelAssembler assembler) {
 		this.authorService = bookService;
 		this.assembler = assembler;
-		this.repository = repository;
 	}
 	
 	// Aggregate root
@@ -58,7 +55,7 @@ public class AuthorController {
     	
     	Author author = authorService.createNewAuthor(newAuthor);
     	
-    	EntityModel<Author> entityModel = assembler.toModel(repository.save(newAuthor));
+    	EntityModel<Author> entityModel = assembler.toModel(author);
     	
 		return ResponseEntity //
 				.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
@@ -74,8 +71,6 @@ public class AuthorController {
         
     	return ResponseEntity.ok(entityModel);
     }
-
-    
 
     
     @DeleteMapping("/authors/{id}")

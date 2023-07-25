@@ -3,6 +3,7 @@ package com.example.library.service;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.example.library.exception.BookNotFoundException;
@@ -11,6 +12,7 @@ import com.example.library.model.Book;
 import com.example.library.repository.BookRepository;
 
 @Service
+@Transactional
 public class BookService {
 	
 	private final BookRepository repository;
