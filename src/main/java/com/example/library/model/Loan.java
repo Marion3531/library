@@ -2,6 +2,8 @@ package com.example.library.model;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -23,6 +25,7 @@ public class Loan {
 	//one-to-many relationship between Book and Loan -> each book can have multiple loans (including both active and returned loans).
 	@ManyToOne
 	@JoinColumn(name="book_id")
+	@JsonIgnoreProperties("loans")
 	private Book book;
 	
 	@ManyToOne

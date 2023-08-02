@@ -4,9 +4,9 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.example.library.exception.BookAlreadyBorrowedException;
-import com.example.library.exception.LoanNotFoundException;
 import com.example.library.model.Book;
 import com.example.library.model.Loan;
 import com.example.library.model.User;
@@ -60,6 +60,7 @@ public class LoanService {
 	
 	//PUT -> update loan to isBorrowed = false/return the book
 	@Transactional
+	@CrossOrigin(origins = "http://localhost:3000")
 	public void updateLoanToFalse(Long loanId) {
 		
 		repository.markBookAsReturned(loanId);

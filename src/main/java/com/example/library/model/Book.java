@@ -8,10 +8,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.JoinColumn;
 
@@ -20,7 +20,7 @@ import jakarta.persistence.JoinColumn;
 @Table(name="books")
 public class Book {
 
-	private @Id @GeneratedValue(strategy = GenerationType.SEQUENCE) Long id;
+	private @Id @GeneratedValue Long id;
 	private String title;
 	private String description;
 	
@@ -33,6 +33,10 @@ public class Book {
     
     @JsonIgnoreProperties(value = "books")
     private List<Author> authors = new ArrayList<>();
+    
+    @OneToMany(mappedBy = "book")
+    @JsonIgnoreProperties(value = "books")
+    private List<Loan> loans = new ArrayList<>();
 	
 	public Book() {}
 	
@@ -72,10 +76,19 @@ public class Book {
 	public void setAuthors(List<Author> authors) {
 		this.authors = authors;
 	}
+	
+    public List<Loan> getLoans() {
+        return loans;
+    }
+
+    public void setLoans(List<Loan> loans) {
+        this.loans = loans;
+    }
 
 	@Override
 	public String toString() {
-		return "Book [id=" + id + ", title=" + title + ", description=" + description + ", authors=" + authors + "]";
+		return "Book [id=" + id + ", title=" + title + ", description=" + description + ", authors=" + authors
+				+ ", loans=" + loans + "]";
 	}
 
 }

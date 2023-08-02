@@ -10,6 +10,7 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,11 +24,11 @@ import com.example.library.assembler.BookModelAssembler;
 import com.example.library.assembler.LoanModelAssembler;
 import com.example.library.model.Book;
 import com.example.library.model.Loan;
-import com.example.library.repository.LoanRepository;
 import com.example.library.service.BookService;
 import com.example.library.service.LoanService;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 public class BookController {
 
 	private final BookService bookService;
@@ -76,7 +77,6 @@ public class BookController {
                 .map(assembler::toModel)
                 .collect(Collectors.toList());
 
-        System.out.println("bonjour");
         return CollectionModel.of(bookModels, linkTo(methodOn(BookController.class).all()).withSelfRel());
     }
     
