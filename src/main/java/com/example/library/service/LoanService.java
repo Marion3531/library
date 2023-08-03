@@ -4,8 +4,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.CrossOrigin;
-
 import com.example.library.exception.BookAlreadyBorrowedException;
 import com.example.library.model.Book;
 import com.example.library.model.Loan;
@@ -36,10 +34,10 @@ public class LoanService {
 	}
 	
 	//POST -> create a loan/borrow a book
-	public Loan createLoan(Long bookId, Long userId) {
+	public Loan createLoan(Long bookId) {
 		
 		Book book = bookService.getBookById(bookId);
-		User user = userService.getUserById(userId);
+		User user = userService.getUserById(2L);
 		
 		List<Loan> activeLoans = repository.findByBookAndIsBorrowedTrue(book);
 		
@@ -60,10 +58,14 @@ public class LoanService {
 	
 	//PUT -> update loan to isBorrowed = false/return the book
 	@Transactional
-	@CrossOrigin(origins = "http://localhost:3000")
 	public void updateLoanToFalse(Long loanId) {
 		
 		repository.markBookAsReturned(loanId);
+	}
+	
+	public void deleteLoanFromDB(Long loanId) {
+		
+		repository.deleteById(loanId);
 	}
 	
 }

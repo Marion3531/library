@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import com.example.library.dto.BookDTO;
 import com.example.library.exception.BookNotFoundException;
 import com.example.library.model.Author;
 import com.example.library.model.Book;
@@ -29,6 +30,13 @@ public class BookService {
 		List<Book> books = repository.findAll();
 
 		return books;
+	}
+	
+	public List<BookDTO> getAllBooksDTO() {
+		
+		List<BookDTO> booksDTO = repository.findAllBooksWithBorrowStatus();
+		
+		return booksDTO;
 	}
 
 	// Single item

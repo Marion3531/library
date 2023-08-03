@@ -3,7 +3,9 @@ package com.example.library.controller;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.library.model.Loan;
@@ -23,5 +25,11 @@ public class LoanController {
 	public List<Loan> getAllLoans(){
 		
 		return loanService.getAllLoans();
+	}
+	
+	@DeleteMapping("/loans/{loanId}")
+	public void deleteLoanFromDb(@PathVariable Long loanId) {
+		
+		loanService.deleteLoanFromDB(loanId);
 	}
 }
