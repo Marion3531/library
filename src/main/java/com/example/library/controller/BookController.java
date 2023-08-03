@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.library.assembler.BookModelAssembler;
 import com.example.library.assembler.LoanModelAssembler;
-import com.example.library.dto.BookDTO;
+import com.example.library.dto.BookProjection;
 import com.example.library.model.Book;
 import com.example.library.model.Loan;
 import com.example.library.service.BookService;
@@ -65,7 +65,7 @@ public class BookController {
 	*/
 
 	@GetMapping("/books")
-	public List<BookDTO> all() {
+	public List<BookProjection> all() {
 
 		return bookService.getAllBooksDTO();
 	}
