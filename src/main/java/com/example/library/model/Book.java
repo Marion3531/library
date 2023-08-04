@@ -1,19 +1,11 @@
 package com.example.library.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import jakarta.persistence.JoinColumn;
 
 
 @Entity
@@ -31,11 +23,11 @@ public class Book {
         inverseJoinColumns = @JoinColumn(name = "author_id")
     )
     
-    @JsonIgnoreProperties(value = "books")
+    @JsonManagedReference
     private List<Author> authors = new ArrayList<>();
-    
-    @OneToMany(mappedBy = "book")
-    @JsonIgnoreProperties(value = "books")
+
+    @JsonBackReference
+    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
     private List<Loan> loans = new ArrayList<>();
 	
 	public Book() {}
@@ -87,8 +79,7 @@ public class Book {
 
 	@Override
 	public String toString() {
-		return "Book [id=" + id + ", title=" + title + ", description=" + description + ", authors=" + authors
-				+ ", loans=" + loans + "]";
+		return "Book [id=" + id + ", title=" + title + ", description=" + description + "]";
 	}
 
 }

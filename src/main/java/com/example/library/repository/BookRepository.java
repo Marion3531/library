@@ -2,6 +2,7 @@ package com.example.library.repository;
 
 import java.util.List;
 
+import com.example.library.dto.BookAvailability;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -21,4 +22,21 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 			+ "GROUP BY books.id", nativeQuery = true)
 	List<BookProjection> findAllBooksWithBorrowStatus();
 
+    @Query("""
+        SELECT b, (CASE WHEN COUNT(l.id) > 0 THEN true ELSE false END)
+        FROM Book b
+        LEFT JOIN Loan l ON b.id = l.book.id AND l.isBorrowed = true
+        GROUP BY b
+    """
+    )
+    List<Object[]> findAllWithAvailability();
+
+    @Query("""
+        SELECT b AS book, (CASE WHEN COUNT(l.id) > 0 THEN true ELSE false END) AS isBorrowed
+        FROM Book b
+        LEFT JOIN Loan l ON b.id = l.book.id AND l.isBorrowed = true
+        GROUP BY b.id
+    """
+    )
+    List<BookAvailability> findAllWithAvailabilityProjection();
 }

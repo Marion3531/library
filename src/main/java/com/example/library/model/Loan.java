@@ -1,16 +1,9 @@
 package com.example.library.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
+
 import java.util.Date;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 
 
 @Entity
@@ -26,19 +19,16 @@ public class Loan {
 	//one-to-many relationship between Book and Loan -> each book can have multiple loans (including both active and returned loans).
 	@ManyToOne
 	@JoinColumn(name="book_id")
-	@JsonIgnoreProperties({"loans"})
+    @JsonManagedReference
 	private Book book;
 	
 	@ManyToOne
 	@JoinColumn(name="user_id")
 	private User user;
 	
-	public Loan() {
-		
-	}
+	public Loan() {}
 
 	public Loan(Date borrowingDate, int borrowingPeriod, boolean isBorrowed) {
-
 		this.borrowingDate = borrowingDate;
 		this.borrowingPeriod = borrowingPeriod;
 		this.isBorrowed = isBorrowed;
@@ -95,7 +85,7 @@ public class Loan {
 	@Override
 	public String toString() {
 		return "Loan [id=" + id + ", borrowingDate=" + borrowingDate + ", borrowingPeriod=" + borrowingPeriod
-				+ ", isBorrowed=" + isBorrowed + ", book=" + book + ", user=" + user + "]";
+				+ ", isBorrowed=" + isBorrowed + ", book=" + book.getTitle() + ", user=" + user.getUsername() + "]";
 	}
 
 }

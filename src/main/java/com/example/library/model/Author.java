@@ -1,16 +1,10 @@
 package com.example.library.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
 
 @Entity
 @Table(name="authors")
@@ -21,8 +15,8 @@ public class Author {
 	String lastname;
     
 	@ManyToMany(mappedBy = "authors", fetch = FetchType.LAZY)
-	
-	@JsonIgnoreProperties(value = "authors") 
+
+    @JsonBackReference
 	private List<Book> books = new ArrayList<>();
 	
 	/* @JsonIgnoreProperties(value = "authors") :
@@ -70,7 +64,7 @@ public class Author {
 
 	@Override
 	public String toString() {
-		return "Author [id=" + id + ", firstname=" + firstname + ", lastname=" + lastname + ", books=" + books + "]";
+		return "Author [id=" + id + ", firstname=" + firstname + ", lastname=" + lastname + "]";
 	}
 
 }
