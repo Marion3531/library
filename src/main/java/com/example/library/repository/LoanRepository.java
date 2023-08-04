@@ -15,5 +15,6 @@ public interface LoanRepository extends JpaRepository<Loan, Long>{
 	@Modifying
 	@Query("UPDATE Loan l SET l.isBorrowed = false WHERE l.id = :loanId")
 	void markBookAsReturned(Long loanId);
-	
+
+    List<Loan> findAllByBookId(Long bookId);
 }

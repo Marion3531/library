@@ -3,6 +3,7 @@ package com.example.library.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Where;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +29,7 @@ public class Book {
 
     @JsonBackReference
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
+    @Where(clause = "isBorrowed = true")
     private List<Loan> loans = new ArrayList<>();
 	
 	public Book() {}

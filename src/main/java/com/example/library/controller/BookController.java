@@ -13,6 +13,7 @@ import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -57,9 +58,36 @@ public class BookController {
 
 	@GetMapping("/books")
 	public List<BookDTO> all() {
+
+        List<Book> books = bookService.getAllBooks();
+
+        List<BookDTO> dtos = new ArrayList<>();
+        for (var book : books) {
+
+            boolean isBorrowed = false;
+            for (var loan : book.getLoans()) {
+                if (loan.isBorrowed()) {
+                    isBorrowed = true;
+                    break;
+                }
+            }
+
+            boolean isBorrowed = book.getLoans().stream().anyMatch(loan -> loan.isBorrowed());
+
+            dtos.add(
+                    new BookDTO(
+                            book.getId(),
+                            book.getTitle(),
+                            book.getDescription(),
+                            book.getAuthors(),
+                            book.getLoans().size() > 0
+                    )
+            );
+        }
+
 //		return bookService.getAllBooksDTO();
-        return bookService.getBooks();
-//        return bookService.getBooksProjection();
+//        return bookService.getBooks();
+        return bookService.getBooksProjection();
 	}
 
 	// Single Item
