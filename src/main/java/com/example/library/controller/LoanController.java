@@ -27,6 +27,12 @@ public class LoanController {
 		return loanService.getAllLoans();
 	}
 	
+	@GetMapping("/loans/{loanId}")
+	public Loan getLoanbyId(@PathVariable Long loanId) {
+		
+		return loanService.getLoanByid(loanId);
+	}
+	
 	@DeleteMapping("/loans/{loanId}")
 	public void deleteLoanFromDb(@PathVariable Long loanId) {
 		

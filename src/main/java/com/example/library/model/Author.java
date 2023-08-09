@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
@@ -16,7 +17,7 @@ import jakarta.persistence.Table;
 @Table(name="authors")
 public class Author {
 	
-	private @Id @GeneratedValue Long id;
+	private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
 	String firstname;
 	String lastname;
     
@@ -31,7 +32,8 @@ public class Author {
 	
 	public Author() {}
 	
-	public Author(String firstname, String lastname){
+	public Author(int id, String firstname, String lastname){
+		this.id = (long) id;
 		this.firstname = firstname;
 		this.lastname = lastname;
 	}

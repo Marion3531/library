@@ -3,6 +3,7 @@ package com.example.library.controller;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.library.assembler.BookModelAssembler;
 import com.example.library.assembler.LoanModelAssembler;
+import com.example.library.dto.BookDTO;
 import com.example.library.dto.BookProjection;
 import com.example.library.model.Book;
 import com.example.library.model.Loan;
@@ -44,30 +46,38 @@ public class BookController {
 		this.loanService = loanService;
 		this.loanAssembler = loanAssembler;
 	}
-	
+
 	/*
-	// Aggregate root
+	 * // Aggregate root
+	 * 
+	 * @GetMapping("/books") public CollectionModel<EntityModel<Book>> all() {
+	 * 
+	 * List<Book> books = bookService.getAllBooks(); // get the list of books from
+	 * bookService
+	 * 
+	 * // convert each book into an EntityModel and collect them in a list
+	 * List<EntityModel<Book>> bookModels = books.stream().map(assembler::toModel)
+	 * // for each book in the stream, the // method toModel() of the object //
+	 * assembler is called to convert it // into an EntityModel<Book>.
+	 * .collect(Collectors.toList()); // Collectors.toList() est un collecteur
+	 * prédéfini qui collecte les // éléments dans une liste.
+	 * 
+	 * return CollectionModel.of(bookModels,
+	 * linkTo(methodOn(BookController.class).all()).withSelfRel()); }
+	 */
+
 	@GetMapping("/books")
-	public CollectionModel<EntityModel<Book>> all() {
+	public List<BookDTO> all(@RequestParam(required = false) String query) {
 
-		List<Book> books = bookService.getAllBooks(); // get the list of books from bookService
+		if (query != null) {
 
-		// convert each book into an EntityModel and collect them in a list
-		List<EntityModel<Book>> bookModels = books.stream().map(assembler::toModel) // for each book in the stream, the
-																					// method toModel() of the object
-																					// assembler is called to convert it
-																					// into an EntityModel<Book>.
-				.collect(Collectors.toList()); // Collectors.toList() est un collecteur prédéfini qui collecte les
-												// éléments dans une liste.
+			return bookService.searchBooksByTitleOrAuthors(query);
+		} else {
+//			  return bookService.getAllBooksDTO(); //mine
+			return bookService.getBooks(); // Thano's DTO technique
+//		      return bookService.getBooksProjection(); //Thano's projection technique
+		}
 
-		return CollectionModel.of(bookModels, linkTo(methodOn(BookController.class).all()).withSelfRel());
-	}
-	*/
-
-	@GetMapping("/books")
-	public List<BookProjection> all() {
-
-		return bookService.getAllBooksDTO();
 	}
 
 	// Single Item
@@ -79,7 +89,7 @@ public class BookController {
 		return assembler.toModel(book);
 	}
 
-	// SEARCH(GET)
+	/* SEARCH(GET) [méthode à l'origine]
 	@GetMapping("/books/search")
 	public CollectionModel<EntityModel<Book>> searchBook(@RequestParam("query") String query) {
 
@@ -88,7 +98,7 @@ public class BookController {
 		List<EntityModel<Book>> bookModels = booksFound.stream().map(assembler::toModel).collect(Collectors.toList());
 
 		return CollectionModel.of(bookModels, linkTo(methodOn(BookController.class).all()).withSelfRel());
-	}
+	}*/
 
 	@PostMapping("/books")
 	public ResponseEntity<?> createBook(@RequestBody Book book) {

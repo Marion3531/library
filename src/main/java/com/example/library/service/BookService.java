@@ -6,7 +6,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import com.example.library.dto.BookDTO;
 import com.example.library.dto.BookProjection;
+//import com.example.library.dto.Transformer;
 import com.example.library.exception.BookNotFoundException;
 import com.example.library.model.Author;
 import com.example.library.model.Book;
@@ -15,10 +17,10 @@ import com.example.library.repository.BookRepository;
 @Service
 @Transactional
 public class BookService {
-	
+
 	private final BookRepository repository;
 	private AuthorService authorService;
-	
+
 	public BookService(BookRepository repository, AuthorService authorService) {
 		this.repository = repository;
 		this.authorService = authorService;
@@ -31,13 +33,31 @@ public class BookService {
 
 		return books;
 	}
-	
+
+	// what I did
 	public List<BookProjection> getAllBooksDTO() {
-		
+
 		List<BookProjection> booksDTO = repository.findAllBooksWithBorrowStatus();
-		
+
 		return booksDTO;
 	}
+
+	// what Thanos did - DTO technique
+	public List<BookDTO> getBooks() {
+		List<Object[]> bookObjects = repository.findAllWithAvailability();
+		return bookObjects.stream().map(bookObject -> {
+			Book book = (Book) bookObject[0];
+			return new BookDTO(book.getId(), book.getTitle(), book.getDescription(), book.getAuthors(),
+					(boolean) bookObject[1]);
+		}).toList();
+	}
+
+	// what Thanos did - projection technique
+	/*
+	 * public List<BookDTO> getBooksProjection() { List<BookAvailability>
+	 * bookAvailabilities = repository.findAllWithAvailabilityProjection(); return
+	 * bookAvailabilities.stream() .map(Transformer::toDto) .toList(); }
+	 */
 
 	// Single item
 	public Book getBookById(Long id) {
@@ -48,11 +68,15 @@ public class BookService {
 	}
 
 	// SEARCH
-	public List<Book> searchBookByTitle(String query) {
-		
-		return repository.searchBookByTitleOrByAuthorsLastname("%" + query + "%");
+	public List<BookDTO> searchBooksByTitleOrAuthors(String query) {
+		List<Object[]> bookObjects = repository.searchBookByTitleOrByAuthorsLastname("%" + query + "%");
+
+		return bookObjects.stream().map(bookObject -> {
+			Book book = (Book) bookObject[0];
+			return new BookDTO(book.getId(), book.getTitle(), book.getDescription(), book.getAuthors());
+		}).toList();
 	}
-	
+
 	// POST
 	public Book createNewBook(Book book) {
 
@@ -91,7 +115,7 @@ public class BookService {
 			updatedBook.setAuthors(book.getAuthors());
 
 		}
-	    
+
 		return repository.save(updatedBook);
 	}
 

@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 import com.example.library.exception.BookAlreadyBorrowedException;
+import com.example.library.exception.LoanNotFoundException;
+import com.example.library.exception.UserNotFoundException;
 import com.example.library.model.Book;
 import com.example.library.model.Loan;
 import com.example.library.model.User;
@@ -31,6 +33,13 @@ public class LoanService {
 		List<Loan> loans = repository.findAll();
 		
 		return loans;
+	}
+	
+	public Loan getLoanByid(Long loanId) {
+		
+		Loan loan = repository.findById(loanId).orElseThrow(() -> new LoanNotFoundException(loanId));
+		
+		return loan;
 	}
 	
 	//POST -> create a loan/borrow a book
