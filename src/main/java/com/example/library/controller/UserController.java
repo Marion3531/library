@@ -32,19 +32,20 @@ public class UserController {
 	}
 	
 	@GetMapping("/users/{id}")
-	public User user(@PathVariable Long id) {
+	public User getUserbyId(@PathVariable Long id) {
 		
 		return userService.getUserById(id);
 	}
 	
+	/* useless car méthode register dans AuthenticationController
 	@PostMapping("/users")
 	public User createUser(@RequestBody User user) {
 		
 		return userService.createUser(user);
-	}
+	}*/
 	
 	@PutMapping("/users/{id}")
-	public User updateUser(@PathVariable Long id, User user) {
+	public User updateUser(@PathVariable Long id, @RequestBody User user) {
 		
 		return userService.updateUser(id, user);
 	}

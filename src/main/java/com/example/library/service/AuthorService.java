@@ -36,8 +36,6 @@ public class AuthorService {
 	// POST
 	public Author createNewAuthor(@RequestBody Author author) {
 
-		//Author entityModel = assembler.toModel(repository.save(newAuthor));
-
 		Author newAuthor = new Author();
 		newAuthor.setFirstname(author.getFirstname());
 		newAuthor.setLastname(author.getLastname());

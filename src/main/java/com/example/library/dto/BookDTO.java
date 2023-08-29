@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BookDTO implements Serializable {
+	
     private Long id;
 
 	private String title;
@@ -18,8 +19,13 @@ public class BookDTO implements Serializable {
 	private List<Author> authors;
 
     private List<AuthorDTO> authorDtos;
+    
 	private boolean isBorrowed;
 
+	public BookDTO() {
+		
+	}
+	
     public BookDTO(Long id, String title, List<AuthorDTO> authorDtos, boolean isBorrowed) {
         this.id = id;
         this.title = title;

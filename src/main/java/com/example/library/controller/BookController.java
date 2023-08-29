@@ -1,13 +1,6 @@
 package com.example.library.controller;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.library.assembler.BookModelAssembler;
 import com.example.library.assembler.LoanModelAssembler;
 import com.example.library.dto.BookDTO;
-import com.example.library.dto.BookProjection;
 import com.example.library.model.Book;
 import com.example.library.model.Loan;
 import com.example.library.service.BookService;

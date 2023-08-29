@@ -2,13 +2,15 @@ package com.example.library.service;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import com.example.library.dto.BookAvailability;
 import com.example.library.dto.BookDTO;
 import com.example.library.dto.BookProjection;
-//import com.example.library.dto.Transformer;
+import com.example.library.dto.Transformer;
 import com.example.library.exception.BookNotFoundException;
 import com.example.library.model.Author;
 import com.example.library.model.Book;
@@ -53,11 +55,9 @@ public class BookService {
 	}
 
 	// what Thanos did - projection technique
-	/*
-	 * public List<BookDTO> getBooksProjection() { List<BookAvailability>
-	 * bookAvailabilities = repository.findAllWithAvailabilityProjection(); return
-	 * bookAvailabilities.stream() .map(Transformer::toDto) .toList(); }
-	 */
+	 public List<BookDTO> getBooksProjection() { List<BookAvailability>
+	 bookAvailabilities = repository.findAllWithAvailabilityProjection(); return
+	 bookAvailabilities.stream() .map(Transformer::toDto) .toList(); }
 
 	// Single item
 	public Book getBookById(Long id) {
@@ -65,6 +65,23 @@ public class BookService {
 		Book book = repository.findById(id).orElseThrow(() -> new BookNotFoundException(id));
 
 		return book;
+	}
+	
+	//Single item DTO
+	public BookDTO convertToDTO(Book book) {
+	    BookDTO dto = new BookDTO();
+	    dto.setId(book.getId());
+	    dto.setTitle(book.getTitle());
+	    dto.setAuthors(book.getAuthors());
+	    
+	    System.out.println(dto);
+	    
+	    return dto;
+	}
+	
+	public BookDTO getBookDTOById(Long id) {
+	    Book book = repository.findById(id).orElseThrow(() -> new BookNotFoundException(id));
+	    return convertToDTO(book);
 	}
 
 	// SEARCH

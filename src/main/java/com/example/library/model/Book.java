@@ -3,6 +3,7 @@ package com.example.library.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Entity;
@@ -35,8 +36,12 @@ public class Book {
     private List<Author> authors = new ArrayList<>();
     
     @OneToMany(mappedBy = "book")
-    @JsonIgnoreProperties(value = "books")
+    @JsonIgnoreProperties(value = "book")
     private List<Loan> loans = new ArrayList<>();
+    
+    @OneToMany(mappedBy = "book")
+    @JsonIgnore
+    private List<Comment> comments = new ArrayList<>();
 	
 	public Book() {}
 	
@@ -84,6 +89,14 @@ public class Book {
     public void setLoans(List<Loan> loans) {
         this.loans = loans;
     }
+
+	public List<Comment> getComments() {
+		return comments;
+	}
+
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
+	}
 
 	@Override
 	public String toString() {

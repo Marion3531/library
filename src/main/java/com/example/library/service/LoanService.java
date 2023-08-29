@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import com.example.library.exception.BookAlreadyBorrowedException;
 import com.example.library.exception.LoanNotFoundException;
-import com.example.library.exception.UserNotFoundException;
 import com.example.library.model.Book;
 import com.example.library.model.Loan;
 import com.example.library.model.User;
