@@ -2,6 +2,7 @@ package com.example.library.controller;
 
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +28,7 @@ public class CommentController {
 	}
 
 	@GetMapping("/comments")
+	@PreAuthorize("hasRole('ANONYMOUS') or hasRole('USER') or hasRole('ADMIN')")
 	public List<Comment> getAll(@RequestParam(required = false) Long bookId) {
 		
 		if (bookId != null) {
@@ -38,12 +40,14 @@ public class CommentController {
 	}
 
 	@GetMapping("/comments/{id}")
+	@PreAuthorize("hasRole('ADMIN')")
 	public Comment getById(@PathVariable Long id) {
 
 		return service.getCommentbyId(id);
 	}
 
 	@PostMapping("/comments/{bookId}")
+	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	public Comment newComment(@PathVariable Long bookId, @RequestBody String content) {
 
 		Long userId = 305L; // id par défaut pour l'instant
@@ -52,12 +56,14 @@ public class CommentController {
 	}
 
 	@PutMapping("/comments/{id}")
+	@PreAuthorize("hasRole('ADMIN')")
 	public Comment updateComment(@PathVariable Long id, @RequestBody String content) {
 
 		return service.updateComment(id, content);
 	}
 
 	@DeleteMapping("/comments/{id}")
+	@PreAuthorize("hasRole('ADMIN')")
 	public void deleteComment(@PathVariable Long id) {
 
 		service.deleteComment(id);

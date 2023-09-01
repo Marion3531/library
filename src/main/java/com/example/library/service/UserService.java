@@ -7,17 +7,14 @@ import org.springframework.stereotype.Service;
 import com.example.library.exception.UserNotFoundException;
 import com.example.library.model.User;
 import com.example.library.repository.UserRepository;
-import com.example.library.repository.UserRoleRepository;
 
 @Service
 public class UserService {
 
 	private UserRepository repository;
-	private UserRoleRepository userRoleRepository;
 
-	public UserService(UserRepository repository, UserRoleRepository userRoleRepository) {
+	public UserService(UserRepository repository) {
 		this.repository = repository;
-		this.userRoleRepository = userRoleRepository;
 	}
 	
 	public List<User> getAllUsers(){
@@ -63,11 +60,14 @@ public class UserService {
 			updatedUser.setPassword(newUserData.getPassword());
 		}
 		
-		if (newUserData.getUserRole() != null) {
-			updatedUser.setUserRole(newUserData.getUserRole());
+		if (newUserData.getRole() != null) {
+			updatedUser.setRole(newUserData.getRole());
 		}
-	
 		
+		/*if (newUserData.getUserRole() != null) {
+			updatedUser.setUserRole(newUserData.getUserRole());
+		}*/
+	
 		return repository.save(updatedUser);
 	}
 	

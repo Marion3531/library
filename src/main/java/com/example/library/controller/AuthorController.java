@@ -9,6 +9,7 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,6 +37,7 @@ public class AuthorController {
 	
 	// Aggregate root
     @GetMapping("/authors")
+    @PreAuthorize("hasRole('ANONYMOUS') or hasRole('USER') or hasRole('ADMIN')")
     public CollectionModel<Author> all() {
     	
     	List<Author> authors = authorService.getAllAuthors();
@@ -45,6 +47,7 @@ public class AuthorController {
     
     //Single Item
     @GetMapping("/authors/{id}")
+    @PreAuthorize("hasRole('ANONYMOUS') or hasRole('USER') or hasRole('ADMIN')")
     public EntityModel<Author> one(@PathVariable Long id) {
     	
     	Author author = authorService.getAuthorById(id);
@@ -53,6 +56,7 @@ public class AuthorController {
     }
     
     @PostMapping("/authors")
+    @PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> createAuthor(@RequestBody Author newAuthor) {
     	
     	Author author = authorService.createNewAuthor(newAuthor);
@@ -65,6 +69,7 @@ public class AuthorController {
 	}
     
     @PutMapping("/authors/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> updateAuthor(@PathVariable Long id, @RequestBody Author author){
         
     	Author updatedAuthor = authorService.replaceAuthor(id, author);
@@ -76,6 +81,7 @@ public class AuthorController {
 
     
     @DeleteMapping("/authors/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     ResponseEntity<?> deleteAuthor(@PathVariable Long id){
     	
     	authorService.deleteAuthorById(id);

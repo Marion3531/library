@@ -2,6 +2,8 @@ package com.example.library.authentication;
 
 import java.util.Objects;
 
+import com.example.library.model.Role;
+
 import lombok.Builder;
 import lombok.Data;
 
@@ -12,12 +14,14 @@ public class RegisterRequest {
 	private String username;
 	private String email;
 	private String password;
+	private Role role;
 	
-	public RegisterRequest(String username, String email, String password) {
+	public RegisterRequest(String username, String email, String password, Role role) {
 		
 		this.username = username;
 		this.email = email;
 		this.password = password;
+		this.role = role;
 	}
 
 	public String getUsername() {

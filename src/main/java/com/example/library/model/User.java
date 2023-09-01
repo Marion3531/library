@@ -12,6 +12,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -30,9 +32,12 @@ public class User implements UserDetails {
 	private String email;
 	private String password;
 
-	@ManyToOne
+	/*@ManyToOne
 	@JoinColumn(name = "user_role_id")
-	private UserRole userRole;
+	private UserRole userRole;*/
+	
+	@Enumerated(EnumType.STRING)
+	private Role role;
 
 	@OneToMany(mappedBy = "user")
 	@JsonIgnore
@@ -52,13 +57,14 @@ public class User implements UserDetails {
 		this.password = password;
 	}
 
-	public User(Long id, String username, String email, String password, UserRole userRole, List<Comment> comments, List<Token> tokens) {
+	public User(Long id, String username, String email, String password, Role role, List<Comment> comments, List<Token> tokens) {
 
 		this.id = id;
 		this.username = username;
 		this.email = email;
 		this.password = password;
-		this.userRole = userRole;
+		//this.userRole = userRole;
+		this.role = role;
 		this.comments = comments;
 		this.tokens = tokens;
 	}
@@ -94,13 +100,13 @@ public class User implements UserDetails {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
-	public UserRole getUserRole() {
-		return userRole;
+	
+	public Role getRole() {
+		return role;
 	}
 
-	public void setUserRole(UserRole userRole) {
-		this.userRole = userRole;
+	public void setRole(Role role) {
+		this.role = role;
 	}
 
 	public List<Comment> getComments() {
@@ -124,12 +130,17 @@ public class User implements UserDetails {
 		return "User [id=" + id + ", username=" + username + ", email=" + email + ", password=" + password + "]";
 	}
 
-	@Override
+	/*@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 
 		List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-		authorities.add(new SimpleGrantedAuthority(userRole.getRole()));
+		authorities.add(new SimpleGrantedAuthority(Role.getRole());
 		return authorities;
+	}*/
+	
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return role.getAuthorities();
 	}
 
 	@Override

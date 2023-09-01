@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.library.config.JwtService;
 import com.example.library.exception.UserRoleNotFoundException;
+import com.example.library.model.Role;
 import com.example.library.model.User;
 import com.example.library.model.UserRole;
 import com.example.library.repository.UserRepository;
@@ -38,11 +39,9 @@ public class AuthenticationService {
 	}
 
 	public AuthenticationResponse register(RegisterRequest request) {
-
-		UserRole userRole = userRoleRepository.findById(1L).orElseThrow(() -> new UserRoleNotFoundException(1L));
-
+		
 		var user = User.builder().username(request.getUsername()).email(request.getEmail())
-				.password(passwordEncoder.encode(request.getPassword())).userRole(userRole).build();
+				.password(passwordEncoder.encode(request.getPassword())).role(Role.USER).build();
 
 		var savedUser = repository.save(user);
 

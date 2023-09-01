@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -59,6 +60,7 @@ public class BookController {
 	 */
 
 	@GetMapping("/books")
+	@PreAuthorize("hasRole('USER') or hasRole('ADMIN') or isAnonymous()")
 	public List<BookDTO> all(@RequestParam(required = false) String query) {
 
 		if (query != null) {
@@ -74,6 +76,7 @@ public class BookController {
 
 	// Single Item
 	@GetMapping("/books/{id}")
+	@PreAuthorize("hasRole('ANONYMOUS') or hasRole('USER') or hasRole('ADMIN')")
 	public EntityModel<Book> one(@PathVariable Long id) {
 
 		Book book = bookService.getBookById(id);
@@ -93,6 +96,7 @@ public class BookController {
 	}*/
 
 	@PostMapping("/books")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> createBook(@RequestBody Book book) {
 
 		Book newBook = bookService.createNewBook(book);
@@ -105,6 +109,7 @@ public class BookController {
 
 	// BORROW A BOOK(POST)
 	@PostMapping("/books/borrow/{bookId}")
+	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	public ResponseEntity<?> borrowBook(@PathVariable Long bookId) {
 
 		Loan loan = loanService.createLoan(bookId);
@@ -119,6 +124,7 @@ public class BookController {
 
 	// RETURN A BOOK(PUT)
 	@PutMapping("/books/return/{loanId}")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> returnBook(@PathVariable Long loanId) {
 
 		loanService.updateLoanToFalse(loanId);
@@ -127,6 +133,7 @@ public class BookController {
 	}
 
 	@PutMapping("/books/{id}")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> updateBook(@PathVariable Long id, @RequestBody Book book) {
 
 		Book updatedBook = bookService.replaceBook(id, book);
@@ -137,6 +144,7 @@ public class BookController {
 	}
 
 	@DeleteMapping("/books/{id}")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> deleteBook(@PathVariable Long id) {
 
 		bookService.deleteBookById(id);
