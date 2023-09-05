@@ -29,6 +29,13 @@ public class UserService {
 		return user;
 	}
 	
+	public User getUserByUsername(String username) {
+		
+		User user = repository.findByUsername(username).orElseThrow(() -> new UserNotFoundException(username));
+		
+		return user;
+	}
+	
 	/* useless car méthode register dans AuthenticationService
 	public User createUser(User user) {
 		

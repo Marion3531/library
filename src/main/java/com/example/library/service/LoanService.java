@@ -42,10 +42,9 @@ public class LoanService {
 	}
 	
 	//POST -> create a loan/borrow a book
-	public Loan createLoan(Long bookId) {
+	public Loan createLoan(Long bookId, User user) {
 		
 		Book book = bookService.getBookById(bookId);
-		User user = userService.getUserById(2L);
 		
 		List<Loan> activeLoans = repository.findByBookAndIsBorrowedTrue(book);
 		
