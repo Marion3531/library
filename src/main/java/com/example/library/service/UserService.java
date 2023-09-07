@@ -2,6 +2,7 @@ package com.example.library.service;
 
 import java.util.List;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.library.exception.UserNotFoundException;
@@ -12,9 +13,13 @@ import com.example.library.repository.UserRepository;
 public class UserService {
 
 	private UserRepository repository;
+	private BCryptPasswordEncoder passwordEncoder;
+	
+	
 
-	public UserService(UserRepository repository) {
+	public UserService(UserRepository repository, BCryptPasswordEncoder passwordEncoder) {
 		this.repository = repository;
+		this.passwordEncoder = passwordEncoder;
 	}
 	
 	public List<User> getAllUsers(){
@@ -64,7 +69,8 @@ public class UserService {
 		}
 		
 		if (newUserData.getPassword() != null) {
-			updatedUser.setPassword(newUserData.getPassword());
+			String hashPassword = passwordEncoder.encode(newUserData.getPassword());
+			updatedUser.setPassword(hashPassword);
 		}
 		
 		if (newUserData.getRole() != null) {

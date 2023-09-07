@@ -15,7 +15,7 @@ import com.example.library.model.User;
 import com.example.library.service.UserService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "Authorization")
 public class UserController {
 
 	private UserService userService;

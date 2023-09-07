@@ -5,7 +5,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -85,7 +84,7 @@ public class BookController {
 
 	// Single Item
 	@GetMapping("/books/{id}")
-	@PreAuthorize("hasRole('ANONYMOUS') or hasRole('USER') or hasRole('ADMIN')")
+	@PreAuthorize("hasRole('USER') or hasRole('ADMIN') or isAnonymous()")
 	public EntityModel<Book> one(@PathVariable Long id) {
 
 		Book book = bookService.getBookById(id);
@@ -119,12 +118,7 @@ public class BookController {
 	// BORROW A BOOK(POST)
 	@PostMapping("/books/borrow/{bookId}")
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	public ResponseEntity<?> borrowBook(@PathVariable Long bookId, @RequestHeader("Authorization") String authorizationHeader) {
-        
-		System.out.println(authorizationHeader);
-		String username = jwtService.extractUsername(authorizationHeader);
-
-		User user = userService.getUserByUsername(username);
+	public ResponseEntity<?> borrowBook(@PathVariable Long bookId, @AuthenticationPrincipal User user) {
 		
 		Loan loan = loanService.createLoan(bookId, user);
 

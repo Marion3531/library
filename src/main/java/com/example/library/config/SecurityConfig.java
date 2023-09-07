@@ -32,7 +32,8 @@ public class SecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.csrf().disable()
 		.authorizeHttpRequests()
-		.requestMatchers("/**") //.requestMatchers("/auth/**")
+		//.requestMatchers("/auth/**")
+		.requestMatchers("/**")
 		.permitAll()
 		.anyRequest()
 		.authenticated()
@@ -44,6 +45,7 @@ public class SecurityConfig {
 		.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
 		.logout()
 		.logoutUrl("/auth/logout")
+		//.logout((logout) -> logout.logoutUrl("/auth/logout"))
 		.addLogoutHandler(logoutHandler)
 		.logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext())
 		;
