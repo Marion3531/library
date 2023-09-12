@@ -13,21 +13,21 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.library.assembler.BookModelAssembler;
 import com.example.library.assembler.LoanModelAssembler;
-import com.example.library.config.JwtService;
 import com.example.library.dto.BookDTO;
 import com.example.library.model.Book;
 import com.example.library.model.Loan;
 import com.example.library.model.User;
 import com.example.library.service.BookService;
 import com.example.library.service.LoanService;
-import com.example.library.service.UserService;
 
 @RestController
+@RequestMapping("/api")
 @CrossOrigin(origins = "http://localhost:3000")
 public class BookController {
 
@@ -35,17 +35,13 @@ public class BookController {
 	private final BookModelAssembler assembler;
 	private final LoanService loanService;
 	private final LoanModelAssembler loanAssembler;
-	private final JwtService jwtService;
-	private final UserService userService; 
 
 	BookController(BookService bookService, BookModelAssembler assembler, LoanService loanService,
-			LoanModelAssembler loanAssembler, JwtService jwtService, UserService userService) {
+			LoanModelAssembler loanAssembler) {
 		this.bookService = bookService;
 		this.assembler = assembler;
 		this.loanService = loanService;
 		this.loanAssembler = loanAssembler;
-		this.jwtService = jwtService;
-		this.userService = userService;
 	}
 
 	/*

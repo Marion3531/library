@@ -18,12 +18,10 @@ public class LoanService {
 
 	private LoanRepository repository;
 	private BookService bookService;
-	private UserService userService;
 	
-	public LoanService(LoanRepository repository, BookService bookService, UserService userService) {
+	public LoanService(LoanRepository repository, BookService bookService) {
 		this.repository = repository;
 		this.bookService = bookService;
-		this.userService = userService;
 	}
 	
 	//GET ALL

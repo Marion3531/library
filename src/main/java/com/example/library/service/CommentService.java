@@ -7,25 +7,21 @@ import org.springframework.stereotype.Service;
 
 import com.example.library.exception.BookNotFoundException;
 import com.example.library.exception.CommentNotFoundException;
-import com.example.library.exception.UserNotFoundException;
 import com.example.library.model.Book;
 import com.example.library.model.Comment;
 import com.example.library.model.User;
 import com.example.library.repository.BookRepository;
 import com.example.library.repository.CommentRepository;
-import com.example.library.repository.UserRepository;
 
 @Service
 public class CommentService {
 	
 	private final CommentRepository repository;
 	private final BookRepository bookRepository;
-	private final UserRepository userRepository;
 	
-	public CommentService(CommentRepository repository, BookRepository bookRepository, UserRepository userRepository) {
+	public CommentService(CommentRepository repository, BookRepository bookRepository) {
 		this.repository = repository;
 		this.bookRepository = bookRepository;
-		this.userRepository = userRepository;
 	}
 	
 	public List<Comment> getAllComments() {
@@ -45,10 +41,9 @@ public class CommentService {
 		return repository.findByBookId(bookId);
 	}
 	
-	public Comment createComment(Long userId, Long bookId, String content) {
+	public Comment createComment(Long bookId, String content, User user) {
 		
 		Book book = bookRepository.findById(bookId).orElseThrow(() -> new BookNotFoundException(bookId));
-		User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
 		
 		Comment comment = new Comment();
 		comment.setDate(new Date());
