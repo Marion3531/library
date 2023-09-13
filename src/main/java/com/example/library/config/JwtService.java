@@ -5,7 +5,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -34,16 +36,21 @@ public class JwtService {
 		return generateToken(new HashMap<>(), userDetails);
 	}
 	
-	public String generateToken(
-		Map<String, Object> extraClaims,
-		UserDetails userDetails
-	) {
+	
+	public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+		
+		String authorities = userDetails.getAuthorities()
+				.stream()
+				.map(GrantedAuthority::getAuthority)
+				.collect(Collectors.joining(","));
+		
 		return Jwts
 				.builder()
 				.setClaims(extraClaims)
 				.setSubject(userDetails.getUsername())
+				.claim("authorities", authorities)
 				.setIssuedAt(new Date(System.currentTimeMillis()))
-				.setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 2)) //2h durée de vie token
+				.setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 2)) //2h durée de vie token  
 				.signWith(getSignInKey(), SignatureAlgorithm.HS256)
 				.compact();
 	}

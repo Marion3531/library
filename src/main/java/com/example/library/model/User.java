@@ -60,7 +60,6 @@ public class User implements UserDetails {
 		this.username = username;
 		this.email = email;
 		this.password = password;
-		//this.userRole = userRole;
 		this.role = role;
 		this.comments = comments;
 		this.tokens = tokens;

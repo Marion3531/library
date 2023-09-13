@@ -8,8 +8,6 @@ public enum Permission {
 	
 	ANONYMOUS_READ("anonymous:read"),
 	ANONYMOUS_CREATE("anonymous:create"),
-	ANONYMOUS_UPDATE("anonymous:update"),
-	ANONYMOUS_DELETE("anonymous:delete"),
 	
 	USER_READ("user:read"),
 	USER_CREATE("user:create"),

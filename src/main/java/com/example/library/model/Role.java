@@ -15,9 +15,7 @@ public enum Role {
     ANONYMOUS(
             Set.of(
                     Permission.ANONYMOUS_READ,
-                    Permission.ANONYMOUS_CREATE,
-                    Permission.ANONYMOUS_UPDATE,
-                    Permission.ANONYMOUS_DELETE
+                    Permission.ANONYMOUS_CREATE
             )
     ),
     
