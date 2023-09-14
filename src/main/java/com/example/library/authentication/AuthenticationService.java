@@ -9,7 +9,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.library.config.JwtService;
-import com.example.library.exception.PasswordNotSafeException;
+import com.example.library.exception.InvalidEmailException;
+import com.example.library.exception.InvalidPasswordException;
+import com.example.library.exception.InvalidUsernameException;
 import com.example.library.model.Role;
 import com.example.library.model.User;
 import com.example.library.repository.UserRepository;
@@ -25,6 +27,17 @@ public class AuthenticationService {
 	private final PasswordEncoder passwordEncoder;
 	private final JwtService jwtService;
 	private final AuthenticationManager authenticationManager;
+	
+	private String usernameRegex = "^[A-Za-z][A-Za-z0-9_]{5,19}$";
+	/*6 to 20 characters inclusive; can only contain alphanumeric characters and underscores, 
+	 * lowercase/uppercase characters, digits; 1st character of the username must be an alphabetic character.*/
+	
+	private String emailRegex = "^(?=[a-zA-Z0-9._-]{1,64}@[^-.][a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*\\.[a-zA-Z]{2,})[a-zA-Z0-9._-]+@[^-.][a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*\\.[a-zA-Z]{2,}$";
+	/*strict regex validation (both for local part and domain part)*/
+	
+	private String passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&-+=()])(?=\\S+$).{8,20}$";
+	/* 8 to 20 characters; at least one digit, one upper case alphabet, one lower case alphabet, 
+	 * one special character ( !@#$%&*()-+=^. ), it doesn’t contain any white space.*/
 
 	public AuthenticationService(UserRepository repository, PasswordEncoder passwordEncoder, JwtService jwtService,
 			AuthenticationManager authenticationManager, TokenRepository tokenRepository) {
@@ -35,19 +48,29 @@ public class AuthenticationService {
 		this.authenticationManager = authenticationManager;
 		this.tokenRepository = tokenRepository;
 	}
-
-	public AuthenticationResponse register(RegisterRequest request) {
-		
-		String regex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&-+=()])(?=\\S+$).{8,20}$";
-		/* 8 to 20 characters; at least one digit, one upper case alphabet, one lower case alphabet, 
-		 * one special character ( !@#$%&*()-+=^. ), it doesn’t contain any white space.*/
+	
+	public boolean isRegisterInfoValid (String input, String regex) {
 		
 		Pattern pattern = Pattern.compile(regex);
 		
-		Matcher matcher = pattern.matcher(request.getPassword());
+		Matcher matcher = pattern.matcher(input);
 		
-	    if (!matcher.matches()) {
-	        throw new PasswordNotSafeException();
+		return matcher.matches();
+		
+	}
+
+	public AuthenticationResponse register(RegisterRequest request) {
+	    
+	    if (!isRegisterInfoValid(request.getUsername(), usernameRegex)) {
+	        throw new InvalidUsernameException();
+	    }
+	    
+	    if (!isRegisterInfoValid(request.getEmail(), emailRegex)) {
+	        throw new InvalidEmailException();
+	    }
+	    
+	    if (!isRegisterInfoValid(request.getPassword(), passwordRegex)) {
+	        throw new InvalidPasswordException();
 	    }
 		
 		var user = User
