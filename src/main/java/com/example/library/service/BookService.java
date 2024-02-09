@@ -7,10 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import com.example.library.dto.BookAvailability;
 import com.example.library.dto.BookDTO;
 import com.example.library.dto.BookProjection;
-import com.example.library.dto.Transformer;
 import com.example.library.exception.BookNotFoundException;
 import com.example.library.model.Author;
 import com.example.library.model.Book;
@@ -55,9 +53,11 @@ public class BookService {
 	}
 
 	// what Thanos did - projection technique
-	 public List<BookDTO> getBooksProjection() { List<BookAvailability>
-	 bookAvailabilities = repository.findAllWithAvailabilityProjection(); return
-	 bookAvailabilities.stream() .map(Transformer::toDto) .toList(); }
+	/*
+	 * public List<BookDTO> getBooksProjection() { List<BookAvailability>
+	 * bookAvailabilities = repository.findAllWithAvailabilityProjection(); return
+	 * bookAvailabilities.stream() .map(Transformer::toDto) .toList(); }
+	 */
 
 	// Single item
 	public Book getBookById(Long id) {
@@ -66,22 +66,22 @@ public class BookService {
 
 		return book;
 	}
-	
-	//Single item DTO
+
+	// Single item DTO
 	public BookDTO convertToDTO(Book book) {
-	    BookDTO dto = new BookDTO();
-	    dto.setId(book.getId());
-	    dto.setTitle(book.getTitle());
-	    dto.setAuthors(book.getAuthors());
-	    
-	    System.out.println(dto);
-	    
-	    return dto;
+		BookDTO dto = new BookDTO();
+		dto.setId(book.getId());
+		dto.setTitle(book.getTitle());
+		dto.setAuthors(book.getAuthors());
+
+		System.out.println(dto);
+
+		return dto;
 	}
-	
+
 	public BookDTO getBookDTOById(Long id) {
-	    Book book = repository.findById(id).orElseThrow(() -> new BookNotFoundException(id));
-	    return convertToDTO(book);
+		Book book = repository.findById(id).orElseThrow(() -> new BookNotFoundException(id));
+		return convertToDTO(book);
 	}
 
 	// SEARCH
@@ -111,6 +111,8 @@ public class BookService {
 		newBook.setTitle(book.getTitle());
 		newBook.setDescription(book.getDescription());
 		newBook.setAuthors(matchingAuthors);
+		newBook.setYearOfPublication(book.getYearOfPublication());
+		newBook.setNumberOfPages(book.getNumberOfPages());
 
 		return repository.save(newBook);
 	}
@@ -131,6 +133,14 @@ public class BookService {
 		if (book.getAuthors() != null) {
 			updatedBook.setAuthors(book.getAuthors());
 
+		}
+		
+	    if (book.getNumberOfPages() != null) {
+	        updatedBook.setNumberOfPages(book.getNumberOfPages());
+	    }
+		
+		if (book.getYearOfPublication() != null) {
+			updatedBook.setYearOfPublication(book.getYearOfPublication());
 		}
 
 		return repository.save(updatedBook);

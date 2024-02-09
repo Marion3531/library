@@ -52,7 +52,9 @@ public class CommentController {
 
 	@PostMapping("/comments/{bookId}")
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	public Comment newComment(@PathVariable Long bookId, @RequestBody String content, @AuthenticationPrincipal User user) {
+	public Comment newComment(@PathVariable Long bookId, 
+								@RequestBody String content, 
+								@AuthenticationPrincipal User user) {
 
 		return service.createComment(bookId, content, user);
 	}

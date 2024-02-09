@@ -27,17 +27,23 @@ public class AuthenticationService {
 	private final PasswordEncoder passwordEncoder;
 	private final JwtService jwtService;
 	private final AuthenticationManager authenticationManager;
-	
+
 	private String usernameRegex = "^[A-Za-z][A-Za-z0-9_]{5,19}$";
-	/*6 to 20 characters inclusive; can only contain alphanumeric characters and underscores, 
-	 * lowercase/uppercase characters, digits; 1st character of the username must be an alphabetic character.*/
-	
+	/*
+	 * 6 to 20 characters inclusive; can only contain alphanumeric characters and
+	 * underscores, lower case/upper case characters, digits; 1st character of the
+	 * username must be an alphabetic character.
+	 */
+
 	private String emailRegex = "^(?=[a-zA-Z0-9._-]{1,64}@[^-.][a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*\\.[a-zA-Z]{2,})[a-zA-Z0-9._-]+@[^-.][a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*\\.[a-zA-Z]{2,}$";
-	/*strict regex validation (both for local part and domain part)*/
-	
+	/* strict regex validation (both for local part and domain part) */
+
 	private String passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&-+=()])(?=\\S+$).{8,20}$";
-	/* 8 to 20 characters; at least one digit, one upper case alphabet, one lower case alphabet, 
-	 * one special character ( !@#$%&*()-+=^. ), it doesn’t contain any white space.*/
+	/*
+	 * 8 to 20 characters; at least one digit, one upper case alphabet, one lower
+	 * case alphabet, one special character ( !@#$%&*()-+=^. ), it doesn’t contain
+	 * any white space.
+	 */
 
 	public AuthenticationService(UserRepository repository, PasswordEncoder passwordEncoder, JwtService jwtService,
 			AuthenticationManager authenticationManager, TokenRepository tokenRepository) {
@@ -48,38 +54,34 @@ public class AuthenticationService {
 		this.authenticationManager = authenticationManager;
 		this.tokenRepository = tokenRepository;
 	}
-	
-	public boolean isRegisterInfoValid (String input, String regex) {
-		
+
+	public boolean isRegisterInfoValid(String input, String regex) {
+
 		Pattern pattern = Pattern.compile(regex);
-		
+
 		Matcher matcher = pattern.matcher(input);
-		
+
 		return matcher.matches();
-		
+
 	}
 
 	public AuthenticationResponse register(RegisterRequest request) {
-	    
-	    if (!isRegisterInfoValid(request.getUsername(), usernameRegex)) {
-	        throw new InvalidUsernameException();
-	    }
-	    
-	    if (!isRegisterInfoValid(request.getEmail(), emailRegex)) {
-	        throw new InvalidEmailException();
-	    }
-	    
-	    if (!isRegisterInfoValid(request.getPassword(), passwordRegex)) {
-	        throw new InvalidPasswordException();
-	    }
-		
-		var user = User
-				.builder()
-				.username(request.getUsername())
-				.email(request.getEmail())
-				.password(passwordEncoder.encode(request.getPassword()))
-				.role(Role.USER).build();
-		
+
+		if (!isRegisterInfoValid(request.getUsername(), usernameRegex)) {
+			throw new InvalidUsernameException();
+		}
+
+		if (!isRegisterInfoValid(request.getEmail(), emailRegex)) {
+			throw new InvalidEmailException();
+		}
+
+		if (!isRegisterInfoValid(request.getPassword(), passwordRegex)) {
+			throw new InvalidPasswordException();
+		}
+
+		var user = User.builder().username(request.getUsername()).email(request.getEmail())
+				.password(passwordEncoder.encode(request.getPassword())).role(Role.USER).build();
+
 		var savedUser = repository.save(user);
 
 		var jwtToken = jwtService.generateToken(user);
@@ -92,7 +94,8 @@ public class AuthenticationService {
 	public AuthenticationResponse authenticate(AuthenticationRequest request) {
 
 		authenticationManager
-				.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+				.authenticate(new UsernamePasswordAuthenticationToken(
+						request.getUsername(), request.getPassword()));
 
 		var user = repository.findByUsername(request.getUsername()).orElseThrow();
 

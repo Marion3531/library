@@ -36,7 +36,9 @@ public class BookController {
 	private final LoanService loanService;
 	private final LoanModelAssembler loanAssembler;
 
-	BookController(BookService bookService, BookModelAssembler assembler, LoanService loanService,
+	BookController(BookService bookService, 
+			BookModelAssembler assembler, 
+			LoanService loanService,
 			LoanModelAssembler loanAssembler) {
 		this.bookService = bookService;
 		this.assembler = assembler;
@@ -44,43 +46,20 @@ public class BookController {
 		this.loanAssembler = loanAssembler;
 	}
 
-	/*
-	 * // Aggregate root
-	 * 
-	 * @GetMapping("/books") public CollectionModel<EntityModel<Book>> all() {
-	 * 
-	 * List<Book> books = bookService.getAllBooks(); // get the list of books from
-	 * bookService
-	 * 
-	 * // convert each book into an EntityModel and collect them in a list
-	 * List<EntityModel<Book>> bookModels = books.stream().map(assembler::toModel)
-	 * // for each book in the stream, the // method toModel() of the object //
-	 * assembler is called to convert it // into an EntityModel<Book>.
-	 * .collect(Collectors.toList()); // Collectors.toList() est un collecteur
-	 * prédéfini qui collecte les // éléments dans une liste.
-	 * 
-	 * return CollectionModel.of(bookModels,
-	 * linkTo(methodOn(BookController.class).all()).withSelfRel()); }
-	 */
-
 	@GetMapping("/books")
-	@PreAuthorize("hasRole('USER') or hasRole('ADMIN') or isAnonymous()")
 	public List<BookDTO> all(@RequestParam(required = false) String query) {
 
 		if (query != null) {
 
 			return bookService.searchBooksByTitleOrAuthors(query);
 		} else {
-//			  return bookService.getAllBooksDTO(); //mine
-			return bookService.getBooks(); // Thano's DTO technique
-//		      return bookService.getBooksProjection(); //Thano's projection technique
+			return bookService.getBooks();
 		}
 
 	}
 
 	// Single Item
 	@GetMapping("/books/{id}")
-	@PreAuthorize("hasRole('USER') or hasRole('ADMIN') or isAnonymous()")
 	public EntityModel<Book> one(@PathVariable Long id) {
 
 		Book book = bookService.getBookById(id);
@@ -88,26 +67,30 @@ public class BookController {
 		return assembler.toModel(book);
 	}
 
-	/* SEARCH(GET) [méthode à l'origine]
-	@GetMapping("/books/search")
-	public CollectionModel<EntityModel<Book>> searchBook(@RequestParam("query") String query) {
-
-		List<Book> booksFound = bookService.searchBookByTitle(query);
-
-		List<EntityModel<Book>> bookModels = booksFound.stream().map(assembler::toModel).collect(Collectors.toList());
-
-		return CollectionModel.of(bookModels, linkTo(methodOn(BookController.class).all()).withSelfRel());
-	}*/
+	/*
+	 * SEARCH(GET) [méthode à l'origine]
+	 * 
+	 * @GetMapping("/books/search") public CollectionModel<EntityModel<Book>>
+	 * searchBook(@RequestParam("query") String query) {
+	 * 
+	 * List<Book> booksFound = bookService.searchBookByTitle(query);
+	 * 
+	 * List<EntityModel<Book>> bookModels =
+	 * booksFound.stream().map(assembler::toModel).collect(Collectors.toList());
+	 * 
+	 * return CollectionModel.of(bookModels,
+	 * linkTo(methodOn(BookController.class).all()).withSelfRel()); }
+	 */
 
 	@PostMapping("/books")
-	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> createBook(@RequestBody Book book) {
 
 		Book newBook = bookService.createNewBook(book);
 
 		EntityModel<Book> entityModel = assembler.toModel(newBook);
 
-		return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(newBook);
+		return ResponseEntity.created(entityModel.getRequiredLink(
+				IanaLinkRelations.SELF).toUri()).body(newBook);
 
 	}
 
@@ -115,7 +98,7 @@ public class BookController {
 	@PostMapping("/books/borrow/{bookId}")
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	public ResponseEntity<?> borrowBook(@PathVariable Long bookId, @AuthenticationPrincipal User user) {
-		
+
 		Loan loan = loanService.createLoan(bookId, user);
 
 		EntityModel<Loan> entityModel = loanAssembler.toModel(loan);

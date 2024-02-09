@@ -50,7 +50,8 @@ public class JwtService {
 				.setSubject(userDetails.getUsername())
 				.claim("authorities", authorities)
 				.setIssuedAt(new Date(System.currentTimeMillis()))
-				.setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 2)) //2h durée de vie token  
+				//2h durée de vie token
+				.setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 2))   
 				.signWith(getSignInKey(), SignatureAlgorithm.HS256)
 				.compact();
 	}

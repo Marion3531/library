@@ -24,6 +24,8 @@ public class Book {
 	private @Id @GeneratedValue Long id;
 	private String title;
 	private String description;
+	private Integer yearOfPublication;
+	private Integer numberOfPages;
 	
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -31,7 +33,6 @@ public class Book {
         joinColumns = @JoinColumn(name = "book_id"),
         inverseJoinColumns = @JoinColumn(name = "author_id")
     )
-    
     @JsonIgnoreProperties(value = "books")
     private List<Author> authors = new ArrayList<>();
     
@@ -45,9 +46,11 @@ public class Book {
 	
 	public Book() {}
 	
-	public Book(String title, String description){
+	public Book(String title, String description, Integer yearOfPublication, Integer numberOfPages){
 		this.title = title;
 		this.description = description;
+		this.yearOfPublication = yearOfPublication;
+		this.numberOfPages = numberOfPages;
 	}
 
 	public Long getId() {
@@ -74,6 +77,22 @@ public class Book {
 		this.description = description;
 	}
 	
+	public Integer getYearOfPublication() {
+		return yearOfPublication;
+	}
+
+	public void setYearOfPublication(Integer yearOfPublication) {
+		this.yearOfPublication = yearOfPublication;
+	}
+
+	public Integer getNumberOfPages() {
+		return numberOfPages;
+	}
+
+	public void setNumberOfPages(Integer numberOfPages) {
+		this.numberOfPages = numberOfPages;
+	}
+
 	public List<Author> getAuthors() {
 		return authors;
 	}
@@ -100,7 +119,9 @@ public class Book {
 
 	@Override
 	public String toString() {
-		return "Book [id=" + id + ", title=" + title + ", description=" + description + "]";
+		return "Book [id=" + id + ", title=" + title + ", description=" + description + ", yearOfPublication="
+				+ yearOfPublication + ", numberOfPages=" + numberOfPages + ", authors=" + authors + ", loans=" + loans
+				+ ", comments=" + comments + "]";
 	}
 
 }

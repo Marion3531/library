@@ -13,11 +13,14 @@ import com.example.library.model.Book;
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long> {
 
-	@Query("SELECT b FROM Book b LEFT JOIN b.authors a WHERE LOWER(b.title) LIKE ?1 OR LOWER(a.firstname) LIKE ?1 OR LOWER(a.lastname) LIKE ?1")
+	@Query("SELECT b FROM Book b "
+			+ "LEFT JOIN b.authors a WHERE LOWER(b.title) LIKE LOWER(?1) "
+			+ "OR LOWER(a.firstname) LIKE LOWER(?1) OR LOWER(a.lastname) LIKE LOWER(?1) "
+			+ "OR LOWER(CONCAT(a.firstname, ' ', a.lastname)) LIKE LOWER(?1)")
 	List<Object[]> searchBookByTitleOrByAuthorsLastname(String query);
 
 	@Query(value = "SELECT books.id, books.title, books.description, "
-			+ "CASE WHEN COUNT(loans.id) > 0 THEN true ELSE false END AS isBorrowed " + "FROM books "
+			+ "CASE WHEN COUNT(loans.id) > 0 THEN true ELSE false END AS isBorrowed FROM books "
 			+ "LEFT JOIN loans ON books.id = loans.book_id AND loans.is_borrowed = true "
 			+ "GROUP BY books.id", nativeQuery = true)
 	List<BookProjection> findAllBooksWithBorrowStatus();

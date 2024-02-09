@@ -24,7 +24,9 @@ public class UserService {
 	
 	public List<User> getAllUsers(){
 		
-		return repository.findAll();
+		List<User> users = repository.findAll();
+		
+		return users;
 	}
 	
 	public User getUserById(Long id) {
@@ -76,10 +78,6 @@ public class UserService {
 		if (newUserData.getRole() != null) {
 			updatedUser.setRole(newUserData.getRole());
 		}
-		
-		/*if (newUserData.getUserRole() != null) {
-			updatedUser.setUserRole(newUserData.getUserRole());
-		}*/
 	
 		return repository.save(updatedUser);
 	}

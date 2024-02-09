@@ -41,13 +41,6 @@ public class UserController {
 		return userService.getUserById(id);
 	}
 	
-	/* useless car méthode register dans AuthenticationController
-	@PostMapping("/users")
-	public User createUser(@RequestBody User user) {
-		
-		return userService.createUser(user);
-	}*/
-	
 	@PutMapping("/users/{id}")
 	@PreAuthorize("hasRole('ADMIN')")
 	public User updateUser(@PathVariable Long id, @RequestBody User user) {
