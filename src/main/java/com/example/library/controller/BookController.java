@@ -45,7 +45,12 @@ public class BookController {
 		this.loanService = loanService;
 		this.loanAssembler = loanAssembler;
 	}
-//aaaaaaaaaaaaaaaaaaaaaaaa
+
+	@GetMapping("/hello")
+	public ResponseEntity<String> hello() {
+		return ResponseEntity.ok("Hello World!");
+	}
+
 	@GetMapping("/books")
 	public List<BookDTO> all(@RequestParam(required = false) String query) {
 
