@@ -45,7 +45,7 @@ public class BookController {
 		this.loanService = loanService;
 		this.loanAssembler = loanAssembler;
 	}
-
+//aaaaaaaaaaaaaaaaaaaaaaaa
 	@GetMapping("/books")
 	public List<BookDTO> all(@RequestParam(required = false) String query) {
 

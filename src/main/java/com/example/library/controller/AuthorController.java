@@ -58,7 +58,7 @@ public class AuthorController {
     }
     
     @PostMapping("/authors")
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> createAuthor(@RequestBody Author newAuthor) {
     	
     	Author author = authorService.createNewAuthor(newAuthor);
