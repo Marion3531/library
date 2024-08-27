@@ -26,8 +26,9 @@ public class Book {
 	private String description;
 	private Integer yearOfPublication;
 	private Integer numberOfPages;
-	
-    @ManyToMany(fetch = FetchType.LAZY)
+	private String imageUrl;
+
+	@ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "author_book",
         joinColumns = @JoinColumn(name = "book_id"),
@@ -46,12 +47,13 @@ public class Book {
 	
 	public Book() {}
 	
-	public Book(String title, String description, Integer yearOfPublication, Integer numberOfPages){
+	public Book(String title, String description, Integer yearOfPublication, Integer numberOfPages, String imageUrl){
 		this.title = title;
 		this.description = description;
 		this.yearOfPublication = yearOfPublication;
 		this.numberOfPages = numberOfPages;
-	}
+        this.imageUrl = imageUrl;
+    }
 
 	public Long getId() {
 		return id;
@@ -115,6 +117,14 @@ public class Book {
 
 	public void setComments(List<Comment> comments) {
 		this.comments = comments;
+	}
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
 	}
 
 	@Override
