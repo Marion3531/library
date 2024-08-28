@@ -1,32 +1,35 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout}"
+      layout:decorate="~{fragments/layout}"
       lang="en">
 <head>
-    <title>Home Page</title>
-    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <title>Book catalog</title>
 </head>
 
 <body>
 
 <main layout:fragment="content">
-    <h1>books catalog</h1>
-    <p>This is the books page.</p>
-</main>
-
-<div class="container">
-<div th:each="book : ${books}">
-    <div class="book">
-        <img class="book-cover" th:src="@{${book.imageUrl}}" alt="Book cover"/>
-        <div class="book-details">
-            <h3 class="book-title" th:text="${book.title}">Book title</h3>
-            <p class="year-publication" th:text="${book.yearOfPublication}">Year of publication</p>
-            <p class="book-nb-pages" th:text="${book.numberOfPages}">Pages</p>
+    <div class="catalog-container">
+        <div th:each="book : ${books}">
+            <div class="book">
+                <img class="book-cover"
+                     th:src="${book.imageUrl != null} ? ${book.imageUrl} : '/images/default.jpg'"
+                     alt="Book cover"/>
+                <div class="book-details">
+                    <h3 class="book-title" th:text="${book.title}">Book title</h3>
+                    <p class="book-authors">
+                <span th:each="author : ${book.authors}">
+                    <span th:text="${author.firstname} + ' ' + ${author.lastname}">Author name</span>
+                    <span th:if="${not authorStat.last}">, </span> <!-- Add a comma if it's not the last author -->
+                </span>
+                    </p>
+                    <p class="year-publication" th:text="${book.yearOfPublication}">Year of publication</p>
+                </div>
+            </div>
         </div>
     </div>
-</div>
-</div>
+</main>
 
 </body>
 

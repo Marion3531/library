@@ -3,24 +3,32 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       lang="en">
+
 <head>
     <title>Alt-Library</title>
     <meta charset="UTF-8">
-    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
 </head>
 
-<body>
+<body class="app-container">
 
 <header>
-    <h1>My Website Header</h1>
+    <div class="header">
+        <h1 th:href="@{/home}">Twin Peaks Public Library</h1>
+    </div>
 </header>
+<nav class="navbar navbar-default">
+    <ul class="nav-pills">
+        <li><a th:href="@{/alt-books}">Our books</a></li>
+        <li><a th:href="@{/ui/page2}">Page2</a></li>
+        <li><a th:href="@{/ui/register}">Register</a></li>
+    </ul>
+</nav>
 
-<main layout:fragment="content">
+<main id="content" layout:fragment="content">MAIN</main>
 
-</main>
-
-<footer>
-    <p>&copy; 2024 My Website</p>
+<footer class="footer">
+    <p>this is a footer</p>
 </footer>
 
 </body>

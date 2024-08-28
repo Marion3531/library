@@ -1,8 +1,30 @@
-.header{
-    background-color: antiquewhite;
+/*############################################## GENERAL */
+
+* {
+    text-decoration: none;
+    list-style-type: none;
 }
 
-.welcome-message{
+/*############################################## HEADER */
+
+.header {
+    text-align: center;
+}
+
+/*############################################## NAVBAR */
+
+.nav-pills {
+    background-color: antiquewhite;
+    color: #bfff00;
+}
+
+/*############################################## HOME PAGE */
+
+.home-container h1 {
+    text-align: center;
+}
+
+.welcome-message {
     max-width: 50%;
     margin: auto;
     padding: 0px 24px 0px 24px;
@@ -11,13 +33,20 @@
     text-align: justify;
     border: solid 1px #bbbbbb;
     border-radius: 4px;
-    background-color: #bfff00;
-
 }
+
+/*############################################## CATALOG PAGE */
+
+.catalog-container {
+    display: flex;
+    max-width: 60%;
+    margin: auto;
+}
+
 
 /*############################################## PICTURE FORMATTING */
 
-.book-cover{
+.book-cover {
     width: 100%;
     height: auto;
     max-width: 200px;
